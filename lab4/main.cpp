@@ -1,16 +1,21 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void task1(){
+
+void task1_8(){
     double a, b ,c, S, p;
+    cout<<"Введите значения для сторон треугольника: "<<endl;
     cin>>a>>b>>c;
     p = (a+b+c)/2;
     S = sqrt((p-a)*(p-b)*(p-c));
     cout<<"S = "<<S<<endl;
+    cout<<endl;
 }
 
-void task2(){
+
+void task2_8(){
     char sym;
+    cout<<"Введите символ для человечка: "<<endl;
     cin>>sym;
     printf("**%c%c%c**", sym,sym,sym);
     printf("**%c%c%c**", sym,sym,sym);
@@ -20,12 +25,32 @@ void task2(){
     printf("***%c***", sym);
     printf("**%c*%c**", sym,sym);
     printf("*%c***%c*", sym,sym);
+    cout<<endl;
+}
 
+
+void task1_16(){
+    char sym;
+    cout<<"Введите 5 скоростей: "<<endl;
+    cin>>sym;
+    printf("***%c***", sym,sym,sym);
+    printf("**%c%c%c**", sym,sym,sym);
+    printf("*%c%c%c%c%c*", sym,sym,sym,sym,sym);
+    printf("***%c***", sym,sym,sym);
+    printf("***%c***", sym,sym,sym);
+    cout<<endl;
+}
+
+
+void task2_16(){
+    double sp1, sp2, sp3, sp4, sp5;
+    cin>>sp1>>sp2>>sp3>>sp4>>sp5;
+    cout<<"Средняя скорость составила: "<<(sp1+sp2+sp3+sp4+sp5)/5<<endl;
 }
 
 
 int main(){
-    task1();
-    task2();
+    task1_8();
+    task2_8();
     return 0;
 }
