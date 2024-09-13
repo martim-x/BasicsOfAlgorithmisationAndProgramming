@@ -32,11 +32,11 @@ void task4_7(){
     cout<<"y = "<<y<<", w = "<<w<<endl;
 
 }
-void main()
+int main()
 {
     task3();
     task4_8();
     task4_16();
     task4_7();
-
+    return 0;
 } 
