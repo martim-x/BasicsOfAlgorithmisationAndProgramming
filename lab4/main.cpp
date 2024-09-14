@@ -52,5 +52,11 @@ void task2_16(){
 int main(){
     task1_8();
     task2_8();
+    task1_16();
+    task2_16();
     return 0;
 }
+
+
+// chcp 65001 For windows
+// export LANG=en_US.UTF-8 For Linux
