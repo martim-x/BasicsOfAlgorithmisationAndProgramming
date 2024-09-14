@@ -17,39 +17,41 @@ void task2_8(){
     char sym;
     cout<<"Введите символ для человечка: "<<endl;
     cin>>sym;
-    printf("**%c%c%c**", sym,sym,sym);
-    printf("**%c%c%c**", sym,sym,sym);
-    printf("***%c***", sym);
-    printf("**%c%c%c**", sym,sym,sym);
-    printf("*%c*%c*%c*", sym,sym,sym);
-    printf("***%c***", sym);
-    printf("**%c*%c**", sym,sym);
-    printf("*%c***%c*", sym,sym);
+    printf("**%c%c%c**\n", sym,sym,sym);
+    printf("**%c%c%c**\n", sym,sym,sym);
+    printf("***%c**\n", sym);
+    printf("**%c%c%c**\n", sym,sym,sym);
+    printf("*%c*%c*%c*\n", sym,sym,sym);
+    printf("***%c***\n", sym);
+    printf("**%c*%c**\n", sym,sym);
+    printf("*%c***%c*\n", sym,sym);
     cout<<endl;
 }
 
 
 void task1_16(){
     char sym;
-    cout<<"Введите 5 скоростей: "<<endl;
+    cout<<"Введите символ для грибочка: "<<endl;
     cin>>sym;
-    printf("***%c***", sym,sym,sym);
-    printf("**%c%c%c**", sym,sym,sym);
-    printf("*%c%c%c%c%c*", sym,sym,sym,sym,sym);
-    printf("***%c***", sym,sym,sym);
-    printf("***%c***", sym,sym,sym);
+    printf("***%c***\n", sym,sym,sym);
+    printf("**%c%c%c**\n", sym,sym,sym);
+    printf("*%c%c%c%c%c*\n", sym,sym,sym,sym,sym);
+    printf("***%c***\n", sym,sym,sym);
+    printf("***%c***\n", sym,sym,sym);
     cout<<endl;
 }
 
 
 void task2_16(){
     double sp1, sp2, sp3, sp4, sp5;
+    cout<<"Введите 5 скоростей: "<<endl;
     cin>>sp1>>sp2>>sp3>>sp4>>sp5;
     cout<<"Средняя скорость составила: "<<(sp1+sp2+sp3+sp4+sp5)/5<<endl;
 }
 
 
 int main(){
+    setlocale(LC_ALL, "ru_RU.UTF-8");
     task1_8();
     task2_8();
     task1_16();

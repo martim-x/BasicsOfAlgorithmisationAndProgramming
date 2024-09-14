@@ -34,6 +34,7 @@ void task4_7(){
 
 
 int main(){
+    setlocale(LC_CTYPE, "Russian"); 
     task3();
     task4_8();
     task4_16();
