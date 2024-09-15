@@ -76,6 +76,7 @@ void task7()
 
 int main()
 {
+    setlocale(LC_ALL, "ru_RU.UTF-8");
     task5();
     task6();
     task7();
