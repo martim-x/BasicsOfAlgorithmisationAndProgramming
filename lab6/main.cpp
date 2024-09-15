@@ -45,10 +45,20 @@ void task5forfor()
     }
 }
 
+void task6()
+{
+    string str;
+    cin >> str;
+    str.erase(remove(str.begin(),str.end(),'3'), str.end());
+    str.erase(remove(str.begin(),str.end(),'6'), str.end());
+    cout<<"Строка без 3 и 6: "<<str<<endl;
+}
+
 int main()
 {
     task5for();
     task5while();
     task5forfor();
+    task6();
     return 0;
 }
