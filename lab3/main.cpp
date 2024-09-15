@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-// chcp 65001 For windows
+// chcp 65001 For Windows
 // export LANG=en_US.UTF-8 For Linux
 void task3()
 {
