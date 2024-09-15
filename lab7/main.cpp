@@ -3,15 +3,16 @@ using namespace std;
 // chcp 65001 For Windows
 // export LANG=en_US.UTF-8 For Linux
 
-vector<long long> searchPrimes(long long num)
-{
+
+
+vector<long long> searchPrimes(long long num){
     bitset<10000000> bs;
     bs.set();
 
     vector<long long> primes;
 
     long long sqrtOfnum = sqrt(num);
-    for (long long i = 2; i < sqrtOfnum; i++)
+    for (long long i = 2; i <= sqrtOfnum; i++)
         if (bs[i])
         {
             for (long long j = i; j < sqrtOfnum; j += i)
@@ -23,12 +24,45 @@ vector<long long> searchPrimes(long long num)
     return primes;
 }
 
-int main()
-{
+
+set<long long> searchDeviders(vector<long long> primes, long long num){
+    set<long long> deviders;
+    for (auto dev : primes)
+        while (num % dev == 0)
+        {
+            num /= dev;
+            deviders.insert(dev);
+        }
+
+    for (auto dev: deviders)
+        cout<<dev<<endl;
+    return deviders;
+}
+
+
+void pouring(){
+    double C1, C2;
+    cout << "Введите C1 и C2: " << endl;
+    cin >> C1 >> C2;
+    for (int i = 0; i < 12; i++)
+    {
+        C2 += C1 / 2;
+        C1 = C1 / 2;
+        C1 += C2 / 2;
+        C2 = C2 / 2;
+    }
+    cout << "C1 = " << C1 << ", C2 = " << C2 << endl;
+}
+
+
+int main(){
     long long num;
+    cout << "Введите число: " << endl;
     cin >> num;
+
     vector<long long> primes = searchPrimes(num);
-    for (auto el : primes)
-        cout << el << endl;
+    set<long long> deviders = searchDeviders(primes, num);
+
+    pouring();
     return 0;
 }
