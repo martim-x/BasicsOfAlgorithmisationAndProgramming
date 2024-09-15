@@ -2,30 +2,28 @@
 using namespace std;
 // chcp 65001 For Windows
 // export LANG=en_US.UTF-8 For Linux
-int task5()
-{
+
+
+int task5(){
     int num;
     bitset<4> bt;
     cin >> num;
     string str = to_string(num);
 
-    for (int i = 0; i < 4; i++)
-    {
-        if (bt[str[i] - '0'])
-        {
+    for (int i = 0; i < 4; i++){
+        if (bt[str[i] - '0']){
             cout << "Цифры не различны" << endl;
             return 0;
         }
-        else
-        {
+        else{
             bt[str[i] - '0'] = 1;
         }
     }
     cout << "Цифры различны" << endl;
 }
 
-void task6()
-{
+
+void task6(){
     int choice;
 
     cout << "Выберите тему для разговора:\n";
@@ -56,8 +54,8 @@ void task6()
     }
 }
 
-void task7()
-{
+
+void task7(){
     int num1, num2, num3, result = 0;
     cin >> num1 >> num2 >> num3;
     result;
@@ -65,17 +63,13 @@ void task7()
     result += (num2 % 5 == 0) ? num2 : 0;
     result += (num3 % 5 == 0) ? num3 : 0;
     if (result)
-    {
         cout << result << endl;
-    }
     else
-    {
         cout << "error" << endl;
-    }
 }
 
-int main()
-{
+
+int main(){
     setlocale(LC_ALL, "ru_RU.UTF-8");
     task5();
     task6();

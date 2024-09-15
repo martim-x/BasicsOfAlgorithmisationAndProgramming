@@ -3,8 +3,9 @@
 using namespace std;
 // chcp 65001 For Windows
 // export LANG=en_US.UTF-8 For Linux
-void task1_8()
-{
+
+
+void task1_8(){
     double a, b, c, S, p;
     cout << "Введите значения для сторон треугольника: " << endl;
     cin >> a >> b >> c;
@@ -14,8 +15,8 @@ void task1_8()
     cout << endl;
 }
 
-void task2_8()
-{
+
+void task2_8(){
     char sym;
     cout << "Введите символ для человечка: " << endl;
     cin >> sym;
@@ -30,8 +31,8 @@ void task2_8()
     cout << endl;
 }
 
-void task1_16()
-{
+
+void task1_16(){
     char sym;
     cout << "Введите символ для грибочка: " << endl;
     cin >> sym;
@@ -43,16 +44,16 @@ void task1_16()
     cout << endl;
 }
 
-void task2_16()
-{
+
+void task2_16(){
     double sp1, sp2, sp3, sp4, sp5;
     cout << "Введите 5 скоростей: " << endl;
     cin >> sp1 >> sp2 >> sp3 >> sp4 >> sp5;
     cout << "Средняя скорость составила: " << (sp1 + sp2 + sp3 + sp4 + sp5) / 5 << endl;
 }
 
-int main()
-{
+
+int main(){
     setlocale(LC_ALL, "ru_RU.UTF-8");
     task1_8();
     task2_8();
