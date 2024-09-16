@@ -1,9 +1,6 @@
 {
     "files.associations": {
-        "iostream": "cpp",
         "cmath": "cpp",
-        "complex": "cpp",
-        "functional": "cpp",
-        "bitset": "cpp"
+        "complex": "cpp"
     }
 }

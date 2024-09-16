@@ -27,10 +27,20 @@ void task4_16(){
 }
 
 
+void task4_11(){
+    double a = 1.5, x= 1.8, z=15e-9, w , d;
+    w = tan(1)*(1+x)+z-exp(a);
+    d = 9*sqrt(2-3*x)+abs(a+1);
+    cout << "w = " << w<<", d = "<<d<< endl;
+
+}
+
+
 int main(){
     setlocale(LC_CTYPE, "Russian");
     task4_7();
     task4_8();
     task4_16();
+    task4_11();
     return 0;
 }

@@ -69,6 +69,20 @@ void task7(){
 }
 
 
+void task7_1(){
+    double r,p,q;
+    cout<<"Введите r: "<<endl;
+    cout<<"Введите p: "<<endl;
+    cout<<"Введите q: "<<endl;
+    if (r<=p*q/(sqrt(pow(p,2)+pow(q,2)))){
+        cout<<"Шарик пройдет в ромбированное отверстие"<<endl;
+    }
+    else{
+        cout<<"Шарик не пройдет в ромбированное отверстие"<<endl;
+    }
+}
+
+
 int main(){
     setlocale(LC_ALL, "ru_RU.UTF-8");
     task5();

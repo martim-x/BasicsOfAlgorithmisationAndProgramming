@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <Windows.h>
+//#include <Windows.h>
 using namespace std;
 // chcp 65001 For Windows
 // export LANG=en_US.UTF-8 For Linux
@@ -20,14 +20,14 @@ void task2_8(){
     char sym;
     cout << "Введите символ для человечка: " << endl;
     cin >> sym;
-    printf("**%c%c%c**\n", sym, sym, sym);
-    printf("**%c%c%c**\n", sym, sym, sym);
-    printf("***%c**\n", sym);
-    printf("**%c%c%c**\n", sym, sym, sym);
-    printf("*%c*%c*%c*\n", sym, sym, sym);
-    printf("***%c***\n", sym);
-    printf("**%c*%c**\n", sym, sym);
-    printf("*%c***%c*\n", sym, sym);
+    printf("  %c%c%c  \n", sym, sym, sym);
+    printf("  %c%c%c  \n", sym, sym, sym);
+    printf("   %c  \n", sym);
+    printf("  %c%c%c  \n", sym, sym, sym);
+    printf(" %c %c %c \n", sym, sym, sym);
+    printf("   %c   \n", sym);
+    printf("  %c %c  \n", sym, sym);
+    printf(" %c   %c \n", sym, sym);
     cout << endl;
 }
 
@@ -36,11 +36,11 @@ void task1_16(){
     char sym;
     cout << "Введите символ для грибочка: " << endl;
     cin >> sym;
-    printf("***%c***\n", sym, sym, sym);
-    printf("**%c%c%c**\n", sym, sym, sym);
-    printf("*%c%c%c%c%c*\n", sym, sym, sym, sym, sym);
-    printf("***%c***\n", sym, sym, sym);
-    printf("***%c***\n", sym, sym, sym);
+    printf("   %c   \n", sym, sym, sym);
+    printf("  %c%c%c  \n", sym, sym, sym);
+    printf(" %c%c%c%c%c \n", sym, sym, sym, sym, sym);
+    printf("   %c   \n", sym, sym, sym);
+    printf("   %c   \n", sym, sym, sym);
     cout << endl;
 }
 
