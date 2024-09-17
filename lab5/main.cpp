@@ -69,7 +69,7 @@ void task7(){
 }
 
 
-void task7_4(){
+void task7_1(){
     double r,p,q;
     cout<<"Введите r: "<<endl;
     cout<<"Введите p: "<<endl;
