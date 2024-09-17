@@ -4,6 +4,7 @@
         "cmath": "cpp",
         "complex": "cpp",
         "functional": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "ostream": "cpp"
     }
 }

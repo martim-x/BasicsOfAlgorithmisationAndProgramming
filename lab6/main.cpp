@@ -42,6 +42,56 @@ void task5forfor(){
 }
 
 
+int task6_1(double start, double end, int count){
+    if (start>=end){
+        return count;
+    }
+    else{
+        start = start*1.03;
+        count++;
+        cout<<"день: "<<count<<", прибыль: "<<start<<endl;
+        task6_1(start, end, count);
+    }
+}
+
+
+int task6_4(int k){
+    string strNum = "1";
+    long long intNum = 1;
+    int lim = round((k-5)/10);
+    if (!lim) lim = 1;
+    map<int, int> table = {
+        {1,10},
+        {2,10},
+        {3,10},
+        {4,20},
+        {5,20},
+        {6,20},
+        {7,30},
+        {8,30},
+        {9,30},
+        {10,40},
+        {11,40},
+        {12,40},
+        {13,50},
+        {14,50},
+        {15,50},
+        {16,50},
+        {17,50},
+        {18,60},
+        {19,60}
+    };
+
+    for (int i = 0; i< table[lim]; i++){
+        intNum = intNum<<1;
+        strNum += to_string(intNum);
+    }
+    cout<<strNum<<endl;
+    cout<<strNum[k-1]-'0'<<endl;
+    return strNum[k-1]-'0';
+}
+
+
 void task6(){
     string str;
     cin >> str;
@@ -52,10 +102,21 @@ void task6(){
 
 
 int main(){
+
     setlocale(LC_ALL, "ru_RU.UTF-8");
     task5for();
     task5while();
     task5forfor();
+
+    double P, Q;
+    cout<<"Введите значение для P и Q: "<<endl;
+    cin>>P>>Q;
     task6();
+    cout<<"Столько дней потребуется для увеличения прибыли "<<task6_1(P, Q, 0)<<endl;
+
+    cout<<"Введите значение для k: "<<endl;
+    int k;
+    cin>>k;
+    task6_4(k);
     return 0;
 }

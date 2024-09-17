@@ -55,6 +55,26 @@ void pouring(){
 }
 
 
+vector<long long> task8_1(){
+    vector<long long> ultraprimes = searchPrimes(999);
+
+    vector<long long> megaultraprimes;
+
+    ultraprimes.erase(ultraprimes.begin(), ultraprimes.begin()+4);
+    
+    string strPrime;
+    for(auto prime: ultraprimes){
+        strPrime = to_string(prime*prime);
+        if(strPrime[0]-'0'<strPrime[1]-'0' && strPrime[2]-'0'<strPrime[1]-'0'){
+            megaultraprimes.push_back(prime);
+        }
+    }
+    for(auto prime: megaultraprimes){
+        cout<<prime<<endl;
+    }
+}
+
+
 int main(){
     long long num;
     cout << "Введите число: " << endl;
@@ -64,5 +84,9 @@ int main(){
     set<long long> deviders = searchDeviders(primes, num);
 
     pouring();
+
+    task8_1();
+
+
     return 0;
 }
