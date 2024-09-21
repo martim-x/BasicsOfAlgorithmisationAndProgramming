@@ -92,7 +92,7 @@ int task6_4(int k){
 }
 
 
-void task6(){
+void task6_6(){
     string str;
     cin >> str;
     str.erase(remove(str.begin(),str.end(),'3'), str.end());
@@ -111,7 +111,7 @@ int main(){
     double P, Q;
     cout<<"Введите значение для P и Q: "<<endl;
     cin>>P>>Q;
-    task6();
+    task6_6();
     cout<<"Столько дней потребуется для увеличения прибыли "<<task6_1(P, Q, 0)<<endl;
 
     cout<<"Введите значение для k: "<<endl;

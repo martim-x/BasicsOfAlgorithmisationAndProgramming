@@ -40,7 +40,7 @@ set<long long> searchDeviders(vector<long long> primes, long long num){
 }
 
 
-void pouring(){
+void task8_3(){
     double C1, C2;
     cout << "Введите C1 и C2: " << endl;
     cin >> C1 >> C2;
@@ -75,6 +75,66 @@ vector<long long> task8_1(){
 }
 
 
+void subtask8_2(vector<pair<int, vector<int>>> &summary, vector<pair<int, vector<int>>> &buffers, vector<int> &coins, bool cleaningFlagBuf, bool cleaningFlagSum){
+    if (buffers.empty()){
+        cleaningFlagSum = true;
+    }
+
+    if (summary.empty()){
+        cleaningFlagBuf = true;
+    }
+
+
+    vector<pair<int, vector<int>>> newBuffers;
+
+    for(auto &sum: summary){
+        for(auto &coin: coins){
+            if(sum.first >= coin){
+                pair<int, vector<int>> newEntry = {sum.first - coin, sum.second};
+                newEntry.second.push_back(coin);
+                newBuffers.push_back(newEntry);
+            }
+        }
+    }
+
+    buffers.insert(buffers.end(), newBuffers.begin(), newBuffers.end());
+
+    if(cleaningFlagBuf){
+        buffers.clear();
+        subtask8_2(summary, buffers, coins, false, false);
+    }
+    
+    if(cleaningFlagSum){
+        summary.clear();
+        subtask8_2(buffers, summary, coins, false, false);
+    }
+}
+
+
+void task8_2(){
+    vector<int> coins = {50, 20, 5, 2};
+    vector<pair<int, vector<int>>> buffers;
+    vector<pair<int, vector<int>>> summary = {{100, {}}};
+
+
+    subtask8_2(summary, buffers, coins, false, false);
+
+    set<vector<int>> uniquePaths; 
+
+    for(auto &entry: buffers){
+        sort(entry.second.begin(), entry.second.end());
+        uniquePaths.insert(entry.second);
+    }
+
+    for(auto &path: uniquePaths){
+        for(auto &coin: path){
+            cout << coin << " ";
+        }
+        cout << endl;
+    }
+}
+
+
 int main(){
     long long num;
     cout << "Введите число: " << endl;
@@ -83,7 +143,7 @@ int main(){
     vector<long long> primes = searchPrimes(num);
     set<long long> deviders = searchDeviders(primes, num);
 
-    pouring();
+    task8_3();
 
     task8_1();
 
