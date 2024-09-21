@@ -69,7 +69,7 @@ void task7(){
 }
 
 
-void task7_1(){
+void task7_4(){
     double r,p,q;
     cout<<"Введите r: "<<endl;
     cout<<"Введите p: "<<endl;
@@ -83,11 +83,44 @@ void task7_1(){
 }
 
 
+int task7_5(){
+    vector<int> abc;
+    vector<int> rst;
+    int buffer;
+    cout<<"Введите параметры для a b c: "<<endl;
+    
+    for(int i = 0; i < 2; i++){
+        cin>>buffer;
+        abc.push_back(buffer);
+    }
+
+    cout<<"Введите параметры для r s t: "<<endl;
+    
+    for(int i = 0; i < 2; i++){
+        cin>>buffer;
+        rst.push_back(buffer);
+    }
+    
+    sort(abc.begin(), abc.end());
+    sort(rst.begin(), rst.end());
+    
+    for(int i = 0; i<3; i++){
+        if (abc[i] > rst[i]){
+            return 0;
+        }
+    }
+    
+    cout<<"Да, можно упаковать."<<endl;
+    return 0;
+}
+
+
 int main(){
     setlocale(LC_ALL, "ru_RU.UTF-8");
     task5();
     task6();
     task7();
     task7_4();
+    task7_5();
     return 0;
 }
