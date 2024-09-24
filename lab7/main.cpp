@@ -28,8 +28,7 @@ vector<long long> searchPrimes(long long num){
 set<long long> searchDeviders(vector<long long> primes, long long num){
     set<long long> deviders;
     for (auto dev : primes)
-        while (num % dev == 0)
-        {
+        while (num % dev == 0){
             num /= dev;
             deviders.insert(dev);
         }
@@ -42,10 +41,10 @@ set<long long> searchDeviders(vector<long long> primes, long long num){
 
 void task8_3(){
     double C1, C2;
+    cout << "task8_3" << endl;
     cout << "Введите C1 и C2: " << endl;
     cin >> C1 >> C2;
-    for (int i = 0; i < 12; i++)
-    {
+    for (int i = 0; i < 12; i++){
         C2 += C1 / 2;
         C1 = C1 / 2;
         C1 += C2 / 2;
@@ -55,7 +54,7 @@ void task8_3(){
 }
 
 
-vector<long long> task8_1(){
+void task8_1(){
     vector<long long> ultraprimes = searchPrimes(999);
 
     vector<long long> megaultraprimes;
@@ -69,45 +68,29 @@ vector<long long> task8_1(){
             megaultraprimes.push_back(prime);
         }
     }
+    cout<<"task 8_1  ultraprimes"<<endl;
     for(auto prime: megaultraprimes){
         cout<<prime<<endl;
     }
 }
 
 
-void subtask8_2(vector<pair<int, vector<int>>> &summary, vector<pair<int, vector<int>>> &buffers, vector<int> &coins, bool cleaningFlagBuf, bool cleaningFlagSum){
-    if (buffers.empty()){
-        cleaningFlagSum = true;
-    }
-
-    if (summary.empty()){
-        cleaningFlagBuf = true;
-    }
-
-
-    vector<pair<int, vector<int>>> newBuffers;
+void subtask8_2(vector<pair<int, vector<int>>> &summary, vector<pair<int, vector<int>>> &buffers, vector<int> coins, bool executable){
 
     for(auto &sum: summary){
         for(auto &coin: coins){
             if(sum.first >= coin){
-                pair<int, vector<int>> newEntry = {sum.first - coin, sum.second};
-                newEntry.second.push_back(coin);
-                newBuffers.push_back(newEntry);
+                vector<int> newCombination = sum.second;
+                newCombination.push_back(coin);
+                pair<int, vector<int>> pairForBuffers = {sum.first - coin, newCombination};
+                executable = true;
             }
         }
     }
 
-    buffers.insert(buffers.end(), newBuffers.begin(), newBuffers.end());
-
-    if(cleaningFlagBuf){
-        buffers.clear();
-        subtask8_2(summary, buffers, coins, false, false);
-    }
-    
-    if(cleaningFlagSum){
-        summary.clear();
-        subtask8_2(buffers, summary, coins, false, false);
-    }
+    summary.clear();
+    if (executable)
+        subtask8_2(buffers, summary, coins, false);
 }
 
 
@@ -117,22 +100,27 @@ void task8_2(){
     vector<pair<int, vector<int>>> summary = {{100, {}}};
 
 
-    subtask8_2(summary, buffers, coins, false, false);
+    subtask8_2(summary, buffers, coins, false);
 
     set<vector<int>> uniquePaths; 
 
-    for(auto &entry: buffers){
-        sort(entry.second.begin(), entry.second.end());
-        uniquePaths.insert(entry.second);
+
+    for(auto el: buffers){
+        sort(el.second.begin(), el.second.end());
+        uniquePaths.insert(el.second);
     }
 
-    for(auto &path: uniquePaths){
-        for(auto &coin: path){
+    cout<<"size of uniquePaths: "<<sizeof(uniquePaths)<<endl;
+
+    for(auto path: uniquePaths){
+        for(auto coin: path){
             cout << coin << " ";
         }
         cout << endl;
     }
+
 }
+
 
 
 int main(){
@@ -147,6 +135,6 @@ int main(){
 
     task8_1();
 
-
+    task8_2();
     return 0;
 }
