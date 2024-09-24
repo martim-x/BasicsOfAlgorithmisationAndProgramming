@@ -6,7 +6,7 @@ using namespace std;
 
 int task5(){
     int num;
-    bitset<4> bt;
+    bitset<10> bt;
     cin >> num;
     string str = to_string(num);
 
