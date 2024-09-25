@@ -107,22 +107,12 @@ void task8_2(){
 
 
     for(auto el: buffers){
-        if(!el.first){
-            for (auto subEl: el.second)
-                cout<<subEl;
-            cout<<endl;
-            sort(el.second.begin(), el.second.end());
-            uniquePaths.insert(el.second);
+        if(!el.first)
+            for (auto subEl: el.second){
+                sort(el.second.begin(), el.second.end());
+                uniquePaths.insert(el.second);
         }
     }
-
-    for(auto paths: uniquePaths)
-        for(auto el: paths){
-            cout<<el<<" ";
-        }
-        cout<<endl;
-
-    cout<<"size of uniquePaths: "<<sizeof(uniquePaths)<<endl;
 
     for(auto path: uniquePaths){
         for(auto coin: path){
