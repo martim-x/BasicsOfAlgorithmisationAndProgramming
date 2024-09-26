@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <Windows.h>
+// #include <Windows.h>
 using namespace std;
 // chcp 65001 For Windows
 // export LANG=en_US.UTF-8 For Linux
@@ -74,7 +74,7 @@ void task8_1() {
 }
 
 
-void subtask8_2(set<pair<int, vector<int> > >& summary, set<pair<int, vector<int> > >& buffers, vector<int> coins, bool executable) {
+void subtask8_2(set<pair<int, vector<int>>>& summary, set<pair<int, vector<int>>>& buffers, vector<int> coins, bool executable) {
     for (auto sum : summary) {
 
         for (auto coin : coins) {
@@ -106,8 +106,8 @@ void subtask8_2(set<pair<int, vector<int> > >& summary, set<pair<int, vector<int
 
 void task8_2() {
     vector<int> coins = { 50, 20, 5, 2 };
-    set<pair<int, vector<int> > > buffers;
-    set<pair<int, vector<int> > > summary;
+    set<pair<int, vector<int>>> buffers;
+    set<pair<int, vector<int>>> summary;
 
     summary.insert(make_pair(100, vector<int>()));
 
@@ -124,8 +124,7 @@ void task8_2() {
 }
 
 int main() {
-    //system("chcp 65001");
-    system("export LANG=en_US.UTF-8");
+    system("chcp 65001");
     // SetConsoleCP(65001);
     // SetConsoleOutputCP(65001);
     long long num;
