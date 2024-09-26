@@ -1,5 +1,13 @@
 {
     "files.associations": {
-        "vector": "cpp"
+        "vector": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "iostream": "cpp"
+    },
+    "editor.formatOnSave": true,  // Автоматическое форматирование при сохранении
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd", // Убедитесь, что у вас установлено расширение Clangd
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
     }
 }
