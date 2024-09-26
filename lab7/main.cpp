@@ -82,7 +82,8 @@ void subtask8_2(vector<pair<int, vector<int>>> &summary, vector<pair<int, vector
             if(sum.first >= coin){
                 vector<int> newCombination = sum.second;
                 newCombination.push_back(coin);
-                pair<int, vector<int>> pairForBuffers = {sum.first - coin, newCombination};
+                pair<int, vector<int>> pairForBuffers = make_pair(sum.first - coin, newCombination);
+                buffers.push_back(pairForBuffers);
                 executable = true;
             }
         }
@@ -106,11 +107,12 @@ void task8_2(){
 
 
     for(auto el: buffers){
-        sort(el.second.begin(), el.second.end());
-        uniquePaths.insert(el.second);
+        if(!el.first)
+            for (auto subEl: el.second){
+                sort(el.second.begin(), el.second.end());
+                uniquePaths.insert(el.second);
+        }
     }
-
-    cout<<"size of uniquePaths: "<<sizeof(uniquePaths)<<endl;
 
     for(auto path: uniquePaths){
         for(auto coin: path){

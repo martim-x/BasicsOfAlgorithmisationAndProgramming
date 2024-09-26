@@ -6,13 +6,14 @@ using namespace std;
 
 void task1_4(){
     char sym;
-    cout << "Введите символ для сердечка: " << endl;
-    printf("    %c%c%c\n",sym,sym);
-    printf("  %c%c%c%c%c\n",sym,sym);
-    printf(" %c%c%c%c%c%c\n",sym,sym);
-    printf(" %c%c%c%c%c%c\n",sym,sym);
-    printf("  %c%c%c%c%c\n",sym,sym);
-    printf("    %c%c%c\n",sym,sym);
+    cout << "Введите символ для круга: " << endl;
+    cin>>sym;
+    printf("    %c%c%c\n",sym,sym,sym);
+    printf("  %c%c%c%c%c\n",sym,sym,sym,sym,sym);
+    printf(" %c%c%c%c%c%c\n",sym,sym,sym,sym,sym,sym);
+    printf(" %c%c%c%c%c%c\n",sym,sym,sym,sym,sym,sym);
+    printf("  %c%c%c%c%c\n",sym,sym,sym,sym, sym);
+    printf("    %c%c%c\n",sym,sym,sym);
 }
 
 
