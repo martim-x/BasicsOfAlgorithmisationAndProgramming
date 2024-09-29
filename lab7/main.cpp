@@ -14,7 +14,7 @@ void task6() {
             b = 6 * d * el;
         if (d < k * sqrt(a))
             b = sin(a / el);
-        cout<<"b: "<<b<<endl;
+        cout << "b: " << b << endl;
     }
 
 }
