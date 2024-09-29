@@ -5,6 +5,21 @@ using namespace std;
 // export LANG=en_US.UTF-8 For Linux
 
 
+void task6() {
+    double d, b, k = 6, a = 1.33 * pow(10, 3);
+    vector<double> x = { 0.2 , -3, -6,1 };
+    for (auto el : x) {
+        d = exp(-el) + (el - a) / log(el);
+        if (d >= k * sqrt(a))
+            b = 6 * d * el;
+        if (d < k * sqrt(a))
+            b = sin(a / el);
+        cout<<"b: "<<b<<endl;
+    }
+
+}
+
+
 vector<long long> searchPrimes(long long num) {
     bitset<10000000> bs;
     bs.set();
@@ -125,6 +140,7 @@ void task8_2() {
 
 int main() {
     system("chcp 65001");
+    task6();
     // SetConsoleCP(65001);
     // SetConsoleOutputCP(65001);
     long long num;
