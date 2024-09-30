@@ -3,13 +3,14 @@ using namespace std;
 
 
 double f(double x, int flag) {
-    vector<double> f = { pow(x, 3) - 1, pow(x, 3) + 1 ,pow(x, 2) - 4, sin(x) + 1 };
+    vector<double> f = { pow(x, 3) - 1, pow(x, 3) + 1, pow(x, 2) - 4, sin(x) + 1 };
     return f[flag];
 }
 
 
 double g(double x, int flag) {
-    vector<double> g = { pow(x, 3) + 3 * x - 4, sin(x) + pow(x, 3), exp(x) + 2 * pow(x,2) - 3 , 2 * x + pow(x, 3) - 7 };
+    vector<double> g = { pow(x, 3) + 3 * x - 4, sin(x) + pow(x, 3),
+                        exp(x) + 2 * pow(x, 2) - 3, 2 * x + pow(x, 3) - 7 };
     return g[flag];
 }
 
@@ -68,9 +69,9 @@ int main() {
     vector<double> B = { 3, 6, 8, 3 };
     double n = 200, e = 1e-4;
     for (int i = 0; i < 4; i++) {
-        task5(a, b, n, i);
-        task5_1(a, b, n, i);
-        task6(a, b, e, i);
+        task5(A[i], B[i], n, i);
+        task5_1(A[i], B[i], n, i);
+        task6(A[i], B[i], e, i);
         cout << endl;
     }
     return 0;
