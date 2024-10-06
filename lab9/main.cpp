@@ -9,8 +9,7 @@ double f(double x, int flag) {
 
 
 double g(double x, int flag) {
-    vector<double> g = { pow(x, 3) + 3 * x - 4, sin(x) + pow(x, 3),
-                        exp(x) + 2 * pow(x, 2) - 3, 2 * x + pow(x, 3) - 7 };
+    vector<double> g = { pow(x, 3) + 3 * x - 4, sin(x) + pow(x, 3), exp(x) + 2 * pow(x, 2) - 3, 2 * x + pow(x, 3) - 7 };
     return g[flag];
 }
 
@@ -49,7 +48,6 @@ void task5_1(double a, double b, double n, int flag) {
 
 void task6(double a, double b, double e, int flag) {
     double x;
-
     do {
         x = (a + b) / 2;
         if (g(x, flag) * g(a, flag) <= 0) {
@@ -65,7 +63,6 @@ void task6(double a, double b, double e, int flag) {
 
 int main() {
     vector<double> A = { 0, 3, 4, 1 };
-
     vector<double> B = { 3, 6, 8, 3 };
     double n = 200, e = 1e-4;
     for (int i = 0; i < 4; i++) {

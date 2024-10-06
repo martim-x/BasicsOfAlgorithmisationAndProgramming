@@ -5,28 +5,84 @@ using namespace std;
 
 void task6() {
     int size;
-    cout << "Введите размер массива" << endl;
+    cout << "Input the size of the array: " << endl;
     cin >> size;
     vector<int> vec;
     srand(time(0));
     for (int i = 0; i < size; i++)
         vec.push_back(rand());
 
-    cout << "Элементы массива" << endl;
+    cout << "Elements of the array:  " << endl;
     for (int num : vec) {
         cout << num << " ";
     }
+    cout << endl;
 
     int max = *max_element(vec.begin(), vec.end());
-    cout << "Максимальный элемент массива: " << max << endl;
+    cout << "Max element of the array: " << max << endl;
     for (int i = 1; i <= size; i++)
         if (i % 2 == 0)
-            vec[i-1] = max;
+            vec[i - 1] = max;
 
-    cout << "Элементы массива" << endl;
-    for (int num : vec) {
+    cout << "Elements of the array: " << endl;
+    for (int num : vec)
         cout << num << " ";
+    cout << endl;
+}
+
+
+void task7_2AND7_3() {
+    vector<int> nums;
+    vector<int> repeats(101, 0);
+    srand(time(0));
+    for (int i = 0; i < 100; i++)
+        nums.push_back(rand() % 21 - 10);
+
+    int currentEl, nextEL;
+
+    for (int i = 0; i < nums.size() - 1; i++) {
+        cout << nums[i] << endl;
+        currentEl = nums[i];
+        nextEL = nums[i + 1];
+        if (currentEl == nextEL)
+            repeats[currentEl + 10]++;
     }
+
+    for (int i = 0; i < 21; i++) {
+        if (repeats[i])
+            cout << i - 10 << ": " << repeats[i] << endl;
+    }
+}
+
+
+void task7_6() {
+    vector<int> vec;
+    set<int, greater<int>> sums;
+    int buffer = 0;
+    int num;
+
+    srand(time(0));
+    for (int i = 0; i < 10; i++) {
+        num = rand() % (21) - 10;
+        vec.push_back(num);
+    }
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = 1; j < 10; j++) {
+            for (int k = i; k <= j; k++) {
+                buffer += vec[k];
+            }
+            sums.insert(buffer);
+            buffer = 0;
+        }
+    }
+
+    set<int>::iterator it;
+    it = sums.begin();
+    cout << "Max sum: " << *it << endl;
+    it = --sums.end();
+    cout << "Min sum: " << *it << endl;
+
 }
 
 
@@ -34,6 +90,8 @@ int main() {
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
     task6();
+    task7_2AND7_3();
+    task7_6();
     return 0;
 }
 
