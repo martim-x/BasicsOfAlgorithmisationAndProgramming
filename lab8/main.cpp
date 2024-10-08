@@ -56,6 +56,7 @@ void task6_2() {
 void task6_3() {
     int n, indexMax, indexMin, max = INT_MIN, min = INT_MAX;
     double num;
+    cin>>n;
     for (int i = 0; i < n; i++) {
         cin >> num;
         if (max < num) {
