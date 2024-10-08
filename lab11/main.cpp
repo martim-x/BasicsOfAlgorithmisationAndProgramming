@@ -60,8 +60,7 @@ void task5_12_1() {
 
 int main() {
     // task5_8_1();
-    task5_8_2();
+    // task5_8_2();
     // task5_12_1();
-
     return 0;
 }
