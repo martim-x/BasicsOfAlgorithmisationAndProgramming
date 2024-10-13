@@ -4,13 +4,24 @@ using namespace std;
 
 void task5() {
     vector<double> a = { 3, 12, -4 , 6, 2, 3, 0.4 }, b = { 19, 1, -24, 4.2, 8 };
-    double d, c = 0.7;
+    double d = 0, c = 0.7;
     for (auto elA : a) {
         for (auto elB : b) {
-            d = elA - c * pow(elB - 1, 2);
-            cout << "d: " << d << endl;
+            d += elA - c * pow(elB - 1, 2);
         }
     }
+    cout << "d: " << d << endl;
+
+
+
+    double y = 0, z;
+    vector<double> x = { 1, 6.7,4,6,17 };
+    z = *min_element(x.begin(), x.end()) + 2;
+    for (int i = 0; i < 5; i++) {
+        y += pow(x[i], 2) + z;
+    }
+    cout << "y: " << y << endl;
+
 }
 
 
@@ -19,7 +30,7 @@ void task6_1() {
     cin >> n;
     for (int i = 0; i < n; i++) {
         cin >> num;
-        if (!num % 0) {
+        if (num % 2 == 0) {
             sum += num;
             num = 0;
         }
@@ -45,18 +56,19 @@ void task6_2() {
 void task6_3() {
     int n, indexMax, indexMin, max = INT_MIN, min = INT_MAX;
     double num;
+    cin>>n;
     for (int i = 0; i < n; i++) {
         cin >> num;
         if (max < num) {
             indexMax = n;
             max = num;
         }
-        if (min > num){
+        if (min > num) {
             indexMin = n;
             min = num;
         }
     }
-    cout<<"max: "<<max<<", min: "<<min<<", amount of nums: "<<abs(indexMin-indexMax)<<endl;
+    cout << "max: " << max << ", min: " << min << ", amount of nums: " << abs(indexMin - indexMax) << endl;
 }
 
 
