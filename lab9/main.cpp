@@ -9,7 +9,7 @@ double f(double x, int flag) {
 
 
 double g(double x, int flag) {
-    vector<double> g = { pow(x, 3) + 3 * x - 4, sin(x) + pow(x, 3), exp(x) + 2 * pow(x, 2) - 3, 2 * x + pow(x, 3) - 7 };
+    vector<double> g = { pow(x, 3) + x - 4, sin(x) + pow(x, 3), exp(x) + 2 * pow(x, 2) - 3, 2 * x + pow(x, 3) - 7 };
     return g[flag];
 }
 

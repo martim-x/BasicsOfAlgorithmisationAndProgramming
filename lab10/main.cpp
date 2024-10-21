@@ -28,6 +28,20 @@ void task6() {
     for (int num : vec)
         cout << num << " ";
     cout << endl;
+
+    cout << "Input the size (k): " << endl;
+    cin >> size;
+    int num, buffer = INT_MAX, counter = 0;
+    for (int i = 0; i < size; i++) {
+        num = rand() % 100;
+        cout << num << ", " << buffer;
+        if (num > buffer)
+            cout << " id " << ++counter << endl;;
+        buffer = num;
+        cout << endl;
+    }
+    cout << "amount of invers: " << counter << endl;
+
 }
 
 
@@ -87,8 +101,6 @@ void task7_6() {
 
 
 int main() {
-    SetConsoleCP(65001);
-    SetConsoleOutputCP(65001);
     task6();
     task7_2AND7_3();
     task7_6();

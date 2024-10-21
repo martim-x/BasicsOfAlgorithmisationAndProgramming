@@ -26,7 +26,6 @@ void task5_8_2() {
     cout << "btA: " << btA << "\nbtB: " << btB << endl;
     cout << "Input positions n and m: " << endl;
     cin >> n >> m;
-    cout << "btA: " << btA << endl;
 
     for (int i = 0; i < 3; i++) {
         btB[i + m - 1] = numA & (1 << i + n - 1);
@@ -36,6 +35,9 @@ void task5_8_2() {
     for (int i = 0; i < 3; i++) {
         numA &= ~(1 << i + n);
     }
+    bitset<32> btsA(numA);
+    cout << "btA: " << btsA << endl;
+
 }
 
 
@@ -157,9 +159,9 @@ void task5_14() {
 int main() {
     task5_8_1();
     task5_8_2();
-    task5_12_1();
-    task5_12_2();
-    task5_13();
-    task5_14();
+    // task5_12_1();
+    // task5_12_2();
+    // task5_13();
+    // task5_14();
     return 0;
 }
