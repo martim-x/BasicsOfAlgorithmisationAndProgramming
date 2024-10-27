@@ -4,6 +4,9 @@
         "ostream": "cpp",
         "deque": "cpp",
         "string": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "random": "cpp",
+        "sstream": "cpp",
+        "regex": "cpp"
     }
 }
