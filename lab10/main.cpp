@@ -36,7 +36,7 @@ void task6() {
         num = rand() % 100;
         cout << num << ", " << buffer;
         if (num > buffer)
-            cout << " id " << ++counter << endl;;
+            cout << " id " << ++counter << endl;
         buffer = num;
         cout << endl;
     }
@@ -70,8 +70,9 @@ void task7_2AND7_3() {
 
 
 void task7_6() {
-    vector<int> vec;
+    vector<int> vec, bufferVec;
     set<int, greater<int>> sums;
+    map<int, vector<int>> paths;
     int buffer = 0;
     int num;
 
@@ -79,21 +80,39 @@ void task7_6() {
     for (int i = 0; i < 10; i++) {
         num = rand() % (21) - 10;
         vec.push_back(num);
+        cout << num << endl;
     }
 
     for (int i = 0; i < 10; i++) {
         for (int j = 1; j < 10; j++) {
             for (int k = i; k <= j; k++) {
-                buffer += vec[k];
+                if (vec[k] > 0) {
+                    buffer += vec[k];
+                    bufferVec.push_back(vec[k]);
+                }
+                else {
+                    buffer = 0;
+                    bufferVec.clear();
+
+                }
             }
+            paths.insert(make_pair(buffer, bufferVec));
             sums.insert(buffer);
             buffer = 0;
+            bufferVec.clear();
+
         }
     }
 
     set<int>::iterator it;
     it = sums.begin();
     cout << "Max sum: " << *it << endl;
+
+    cout << endl;
+    for (auto el : paths[*it])
+        cout << el << endl;
+    cout << endl;
+
     it = --sums.end();
     cout << "Min sum: " << *it << endl;
 
@@ -101,8 +120,8 @@ void task7_6() {
 
 
 int main() {
-    task6();
-    task7_2AND7_3();
+    // task6();
+    // task7_2AND7_3();
     task7_6();
     return 0;
 }
