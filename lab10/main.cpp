@@ -120,8 +120,8 @@ void task7_6() {
 
 
 int main() {
-    // task6();
-    // task7_2AND7_3();
+    task6();
+    task7_2AND7_3();
     task7_6();
     return 0;
 }
