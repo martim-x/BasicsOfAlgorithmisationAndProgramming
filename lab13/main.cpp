@@ -2,6 +2,70 @@
 using namespace std;
 
 
+int OverRidestrlen(char str[]) {
+    int i = 0;
+    while (str[i] != '\0')
+        i++;
+    return i;
+}
+
+
+bool OverRidestrcmp(char str1[], char str2[]) {
+    int i = 0;
+    if (OverRidestrlen(str1) != OverRidestrlen(str2))
+        return false;
+
+    while (str1[i] != '\0') {
+        if (str1[i] != str2[2])
+            return false;
+        i++;
+    }
+
+    return true;
+}
+
+void OverRidestrcpy(char dest[], char src[]) {
+    int i = 0;
+    while (src[i] != '\0') {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
+}
+
+
+vector<char*> OverRidestrtok(char str[], char tokens[]) {
+    int i = 0, j = 0;
+    vector<char*> tokenedVec;
+    int pointerToken = 0;
+
+    char strSave[OverRidestrlen(str) + 1];
+    OverRidestrcpy(strSave, str);
+
+    while (str[i] != '\0') {
+        j = 0;
+        while (tokens[j] != '\0') {
+            if (str[i] == tokens[j]) {
+                str[i] = '\0';
+                tokenedVec.push_back(&str[pointerToken]);
+                pointerToken = i + 1;
+                break;
+            }
+            j++;
+        }
+        i++;
+    }
+
+    if (pointerToken < i)
+        tokenedVec.push_back(&str[pointerToken]);
+
+    OverRidestrcpy(str, strSave);
+
+    return tokenedVec;
+
+}
+
+
 void task4() {
 
     char s1[] = "asdfghjkksfddsaf\0";
