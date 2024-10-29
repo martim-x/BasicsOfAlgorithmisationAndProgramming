@@ -24,6 +24,27 @@ bool OverRidestrcmp(char str1[], char str2[]) {
     return true;
 }
 
+// OVERDRIVE!!!
+// void OverRidestrcpy(char* dest[], char* src[]) {
+//     int i = 0;
+//     while (src[i] != '\0') {
+//         dest[i] = src[i];
+//         i++;
+//     }
+//     dest[i] = '\0';
+// }
+
+
+// void OverRidestrcpy(const char* dest[],const char* src[]) {
+//     int i = 0;
+//     while (src[i] != '\0') {
+//         dest[i] = src[i];
+//         i++;
+//     }
+//     dest[i] = '\0';
+// }
+
+
 void OverRidestrcpy(char dest[], char src[]) {
     int i = 0;
     while (src[i] != '\0') {
@@ -32,6 +53,72 @@ void OverRidestrcpy(char dest[], char src[]) {
     }
     dest[i] = '\0';
 }
+
+
+
+// vector<const char*> OverRidestrtok(const char* str[],const  char* tokens[]) {
+//     int i = 0, j = 0;
+//     vector<const char*> tokenedVec;
+//     int pointerToken = 0;
+
+//     const char* strSave[OverRidestrlen(str) + 1];
+//     OverRidestrcpy(strSave, str);
+
+//     while (str[i] != '\0') {
+//         j = 0;
+//         while (tokens[j] != '\0') {
+//             if (str[i] == tokens[j]) {
+//                 str[i] = '\0';
+//                 tokenedVec.push_back(&str[pointerToken]);
+//                 pointerToken = i + 1;
+//                 break;
+//             }
+//             j++;
+//         }
+//         i++;
+//     }
+
+//     if (pointerToken < i)
+//         tokenedVec.push_back(&str[pointerToken]);
+
+//     OverRidestrcpy(str, strSave);
+
+//     return tokenedVec;
+
+// }
+
+
+
+// vector<const char*> OverRidestrtok(char str[], char tokens[]) {
+//     int i = 0, j = 0;
+//     vector<const char*> tokenedVec;
+//     int pointerToken = 0;
+
+//     const char* strSave[OverRidestrlen(str) + 1];
+//     OverRidestrcpy(strSave, str);
+
+//     while (str[i] != '\0') {
+//         j = 0;
+//         while (tokens[j] != '\0') {
+//             if (str[i] == tokens[j]) {
+//                 str[i] = '\0';
+//                 tokenedVec.push_back(&str[pointerToken]);
+//                 pointerToken = i + 1;
+//                 break;
+//             }
+//             j++;
+//         }
+//         i++;
+//     }
+
+//     if (pointerToken < i)
+//         tokenedVec.push_back(&str[pointerToken]);
+
+//     OverRidestrcpy(str, strSave);
+
+//     return tokenedVec;
+
+// }
 
 
 vector<char*> OverRidestrtok(char str[], char tokens[]) {
@@ -66,27 +153,41 @@ vector<char*> OverRidestrtok(char str[], char tokens[]) {
 }
 
 
+void OverRidestrev(char word[]) {
+    int leghtStr = OverRidestrlen(word);
+    char wordBuf[leghtStr];
+    OverRidestrcpy(wordBuf, word);
+    int i = 0;
+    while (i <= leghtStr) {
+        word[i] = wordBuf[leghtStr - i];
+        i++;
+    }
+}
+
+
 void task4() {
 
     char s1[] = "asdfghjkksfddsaf\0";
     char s2[] = "asdghhjhgfjkdasa\0";
     char c1, c2;
-    for (int i = 0; i < strlen(s1); i++) {
+    int lenS1 = OverRidestrlen(s1);
+    for (int i = 0; i < lenS1; i++) {
         c1 = s1[i];
         c2 = s2[i];
         if (c2 == c1)
-            cout << "c2 equals c1 -- " << "c2: " << c2 << ",c1: " << c1 << endl;
+            cout << "c2 equals c1        -- " << "c2: " << c2 << ", c1: " << c1 << endl;
         else
-            cout << "c2 doesm't equal c1 -- " << "c2: " << c2 << ",c1: " << c1 << endl;
+            cout << "c2 doesm't equal c1 -- " << "c2: " << c2 << ", c1: " << c1 << endl;
     }
 
-    char s3[] = "001 11010 10101010 10101 110101 101010101010 10101010";
+    char s3[] = "001 11010 10101010 10101 110101 101010101010 10101010\0";
     char c3;
     set<int> symbols;
     int buffer = 0;
-    for (int i = 0; i < strlen(s3); i++) {
+    int lenS3 = OverRidestrlen(s3);
+    for (int i = 0; i < lenS3; i++) {
         c3 = s3[i];
-        if (c3 == ' ' || i == strlen(s3) - 1) {
+        if (c3 == ' ' || i == lenS3) {
             symbols.insert(buffer);
             buffer = 0;
         }
@@ -111,38 +212,29 @@ void task5_1() {
     cout << "Input the terminate: ";
     cin >> term;
 
-    int term_len = strlen(term);
+    int term_len = OverRidestrlen(term);
 
-    char* word = strtok(str, " ,.;:\n");
+    char terminators[] = " .;:\n\0";
+    vector<char*> words = OverRidestrtok(str, terminators);
 
-    while (word != nullptr) {
-        if (!strcmp(word + strlen(word) - term_len, term)) {
+    for (auto word : words) {
+        cout << word << endl;
+        if (OverRidestrcmp(word + OverRidestrlen(word) - term_len, term))
             cout << word << endl;
-        }
-
-        word = strtok(nullptr, " ,.;:\n");
     }
 }
 
 
 void task5_4() {
     char str1[] = "The story follows the journey of an ugly duckling who is rejected by his family and friends.";
-    char* word1 = strtok(str1, " .,:;\n\0");
-    vector<char*> vecstr1;
-    while (word1 != nullptr) {
-        vecstr1.push_back(word1);
-        word1 = strtok(nullptr, " .,:;\n\0");
-    }
+    char terminators[] = " .;:\n\0";
+    vector<char*> words = OverRidestrtok(str1, terminators);
+    vector<char*> wordsODD;
+    for (int i = 0; i < words.size(); i++)
+        if (i % 2)
+            wordsODD.push_back(words[i]);
 
-    vector<string> vecstr2;
-    for (int i = 0; i < vecstr1.size(); i++)
-        if (i % 2 == 1)
-            vecstr2.push_back(string(vecstr1[i]));
-
-    for (string& i : vecstr2)
-        reverse(i.begin(), i.end());
-
-    for (auto i : vecstr2)
+    for (auto i : wordsODD)
         cout << i << " ";
 }
 
@@ -189,9 +281,9 @@ void task5_5() {
 
 
 int main() {
-    task4();
+    // task4();
     task5_1();
-    task5_4();
-    task5_5();
+    // task5_4();
+    // task5_5();
     return 0;
 }
