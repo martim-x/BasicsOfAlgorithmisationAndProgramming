@@ -10,7 +10,7 @@ void task6() {
     vector<int> vec;
     srand(time(0));
     for (int i = 0; i < size; i++)
-        vec.push_back(rand());
+        vec.push_back(rand() % 100);
 
     cout << "Elements of the array:  " << endl;
     for (int num : vec) {
