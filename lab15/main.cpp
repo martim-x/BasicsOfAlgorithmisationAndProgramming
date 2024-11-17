@@ -6,7 +6,7 @@ void task8_1() {
     cout << "Task 8_1" << endl;
     int k;
 
-    cout << "Enter array size k: ";
+    cout << "Enter array size k: " << endl;
     cin >> k;
 
     int* A = (int*)malloc(k * sizeof(int));
@@ -47,9 +47,9 @@ void task8_2() {
     cout << "Task 8_2" << endl;
     int rows, cols;
 
-    cout << "Enter amount of rows: ";
+    cout << "Enter amount of rows: " << endl;
     cin >> rows;
-    cout << "Enter amount of columns: ";
+    cout << "Enter amount of columns: " << endl;
     cin >> cols;
 
     int** matrix = new int* [rows];
@@ -97,7 +97,7 @@ void task10_1() {
     min = 0;
     max = 0;
 
-    cout << "Enter array size k: ";
+    cout << "Enter array size k: " << endl;
     cin >> k;
 
     int* A = (int*)malloc(k * sizeof(int));
@@ -153,9 +153,9 @@ void task10_2() {
     cout << "Task 10_2" << endl;
     int rows, cols, index;
 
-    cout << "Enter amount of rows: ";
+    cout << "Enter amount of rows: " << endl;
     cin >> rows;
-    cout << "Enter amount of columns: ";
+    cout << "Enter amount of columns: " << endl;
     cin >> cols;
 
     int** matrix = new int* [rows];
@@ -212,7 +212,7 @@ void task10_2() {
 void task11_1() {
     cout << "Task 11_1" << endl;
     int n;
-    cout << "Enter array size n: ";
+    cout << "Enter array size n: " << endl;
     cin >> n;
     int* A = (int*)malloc(n * sizeof(int));
 
@@ -242,11 +242,11 @@ void task11_2() {
     cout << "Task 11_2" << endl;
     int rows = 4, cols = 4;
 
-    cout << "(Default: 4 [input=0]) Enter amount of rows: ";
+    cout << "(Default: 4 [input=0]) Enter amount of rows: " << endl;
     cin >> rows;
     if (rows == 0) rows = 4;
 
-    cout << "(Default: 4 [input=0]) Enter amount of columns: ";
+    cout << "(Default: 4 [input=0]) Enter amount of columns: " << endl;
     cin >> cols;
     if (cols == 0) cols = 4;
 
@@ -289,7 +289,7 @@ void task11_2() {
         cout << "No rows equal to columns" << endl;
     }
 
-    cout << "Do you want to recall this func? (y/n): ";
+    cout << "Do you want to recall this func? (y/n): " << endl;
     char c;
     cin >> c;
     if (c == 'y') {
@@ -301,11 +301,11 @@ void task11_2() {
 void task14_1() {
     cout << "Task 14_1" << endl;
     int n, times = -1, NUM, max, counter = 0;
-    cout << "Enter array size n: ";
+    cout << "Enter array size n: " << endl;
     cin >> n;
     int* A = (int*)malloc(n * sizeof(int));
 
-    cout << "Enter number: ";
+    cout << "Enter number: " << endl;
     cin >> NUM;
 
     max = 0;
@@ -327,7 +327,7 @@ void task14_1() {
     cout << "Max module element: " << A[max++] << endl;
 
     for (int i = max; i < n; i++) {
-        if (times == -1){
+        if (times == -1) {
             times = A[i];
             continue;
         }
@@ -345,10 +345,10 @@ void task14_1() {
 void task14_2() {
     cout << "Task 14_2" << endl;
     int rows, cols, number, index = -1;
-    cout << "Enter amount of rows: ";
+    cout << "Enter amount of rows: " << endl;
     cin >> rows;
 
-    cout << "Enter amount of columns: ";
+    cout << "Enter amount of columns: " << endl;
     cin >> cols;
 
     int** matrix = new int* [rows];
@@ -396,14 +396,14 @@ void task14_2() {
 
 
 int main() {
-    // task8_1();
-    // task8_2();
+    task8_1();
+    task8_2();
 
-    // task10_1();
-    // task10_2();
+    task10_1();
+    task10_2();
 
-    // task11_1();
-    // task11_2();
+    task11_1();
+    task11_2();
 
     task14_1();
     task14_2();

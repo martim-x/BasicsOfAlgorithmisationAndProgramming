@@ -80,7 +80,7 @@ void task6_1() {
     vector<int> vecBuffer;
 
     srand(time(0));
-    cout << "Start matrix:" << endl;
+    cout << "Matrix:" << endl;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             matrix[i][j] = rand() % 11 + 1;
@@ -95,7 +95,7 @@ void task6_1() {
             swap(matrix[i + 1][j], matrix[i][j + 1]);
         }
 
-    cout << "Result matrix:" << endl;
+    cout << "Modified matrix:" << endl;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             cout << matrix[i][j] << " ";
@@ -168,7 +168,7 @@ void task6_3() {
             qu.push(buffer);
         }
 
-    cout << "Start matrix: " << endl;
+    cout << "Matrix: " << endl;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             cout << matrix[i][j] << " ";
@@ -183,7 +183,7 @@ void task6_3() {
         matrix[i][i] = buffer;
     }
 
-    cout << "Result matrix: " << endl;
+    cout << "Modified matrix: " << endl;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             cout << matrix[i][j] << " ";
@@ -195,9 +195,9 @@ void task6_3() {
 
 
 int main() {
-    // task4();
+    task4();
     task6_1();
-    // task6_2();
-    // task6_3();
+    task6_2();
+    task6_3();
     return 0;
 }
