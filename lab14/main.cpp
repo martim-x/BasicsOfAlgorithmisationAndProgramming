@@ -2,8 +2,8 @@
 using namespace std;
 
 
-void task4() {
-    cout << "task4" << endl;
+void task4_8_1() {
+    cout << "task4_8_1" << endl;
     int n, m, pairGR = 0, pairEQ = 0, pairLW = 0;
     vector<int> vecBuffer;
     cout << "Input n and m: " << endl;
@@ -48,23 +48,55 @@ void task4() {
     }
     cout << endl;
     cout << "a ij  < b ij: " << pairLW << ", " << "a ij  = b ij: " << pairEQ << ", " << "a ij  > b ij: " << pairGR << endl;
+}
 
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < m; j++)
-            if (A[i][j] < 0) {
-                for (int k = 0; k < n; k++)
-                    A[k][j] /= 2;
-                break;
-            }
 
-    cout << endl;
-    cout << "Matrix A:" << endl;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cout << A[i][j] << " ";
+void task4_8_2() {
+    int N, M;
+
+    cout << "Enter the number of rows: " << endl;
+    cin >> N;
+
+    cout << "Enter the number of columns: " << endl;
+    cin >> M;
+
+    int** matrix = new int* [N];
+    for (int i = 0; i < N; i++) {
+        *(matrix + i) = new int[M];
+    }
+
+    srand(time(0));
+    cout << "Matrix:" << endl;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            *(*(matrix + i) + j) = rand() % 21 - 10;
+            cout << *(*(matrix + i) + j) << "  ";
         }
         cout << endl;
     }
+
+    cout << "Rows with negative element: ";
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            if (*(*(matrix + i) + j) < 0 && i < M) {
+                cout << i + 1 << " ";
+                for (int k = 0; k < N; k++) {
+                    *(*(matrix + i) + j) /= 2;
+                }
+                break;
+            }
+        }
+    }
+
+    cout << endl << endl;
+    cout << "Modified matrix:" << endl;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            cout << *(*(matrix + i) + j) << "  ";
+        }
+        cout << endl;
+    }
+    cout << endl << endl;
 }
 
 
@@ -195,7 +227,8 @@ void task6_3() {
 
 
 int main() {
-    task4();
+    task4_8_1();
+    task4_8_2();
     task6_1();
     task6_2();
     task6_3();
