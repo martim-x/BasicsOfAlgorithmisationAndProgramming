@@ -46,8 +46,8 @@ void task8_2() {
 
     string str2;
     cout << "(Default [input : 0]) Enter the string: ";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    getline(cin, str2);
+    // cin.ignore(1000, '\n');
+    getline(cin >> ws, str2);
     if (str2[0] == '0')
         str2 = str1;
 
