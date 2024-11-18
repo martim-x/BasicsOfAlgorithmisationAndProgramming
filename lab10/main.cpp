@@ -10,7 +10,7 @@ void task6() {
     vector<int> vec;
     srand(time(0));
     for (int i = 0; i < size; i++)
-        vec.push_back(rand());
+        vec.push_back(rand() % 100);
 
     cout << "Elements of the array:  " << endl;
     for (int num : vec) {
@@ -36,7 +36,7 @@ void task6() {
         num = rand() % 100;
         cout << num << ", " << buffer;
         if (num > buffer)
-            cout << " id " << ++counter << endl;
+            cout << " inversion " << ++counter << endl;
         buffer = num;
         cout << endl;
     }
@@ -120,8 +120,8 @@ void task7_6() {
 
 
 int main() {
-    task6();
-    task7_2AND7_3();
+    // task6();
+    // task7_2AND7_3();
     task7_6();
     return 0;
 }

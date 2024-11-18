@@ -26,11 +26,11 @@ void task5_1() {
     }
 
     cout << "\nMassive Z" << endl;
-    for (auto elX : X)
-        for (auto elY : Y)
-            if (elX == elY) {
-                Z.insert(elX);
-                cout << elX << endl;
+    for (auto iterX = X.begin(); iterX != X.end(); iterX++)
+        for (auto iterY = Y.begin(); iterY != Y.end(); iterY++)
+            if (*iterX == *iterY) {
+                Z.insert(*iterX);
+                cout << *iterX << endl;
             }
 }
 
@@ -60,13 +60,13 @@ void task5_2() {
         cout << buffer << endl;
     }
 
-    for (auto i : x)
-        for (auto j : y)
-            summary.insert(i + j);
+    for (auto iterX = x.begin(); iterX != x.end(); iterX++)
+        for (auto iterY = y.begin(); iterY != y.end(); iterY++)
+            summary.insert(*iterX + *iterY);
 
     cout << "\nSet" << endl;
-    for (auto el : summary)
-        cout << el << endl;
+    for (auto iter = summary.begin(); iter != summary.end(); iter++)
+        cout << *iter << endl;
 
     auto it = summary.lower_bound(q);
     auto lastIt = summary.end();
@@ -103,6 +103,7 @@ void task12_1AND12_2() {
     for (int i = 0; i < n; i++) {
         numA = vecA[i];
         numB = vecB[i];
+        cout << numA << " " << numB << endl;
         if (numA == numB)
             counter_eq++;
         if (numA > numB)
@@ -124,27 +125,27 @@ void task12_1AND12_2() {
     for (int i = 0; i < 100; i++)
         A.push_back(rand() % 201 - 100);
 
-    for (int i = 0; i < 100; i++) {
-        if (A[i] < k)
-            LW.push_back(i);
+    for (auto iterA = A.begin(); iterA != A.end(); iterA++) {
+        if (*iterA < k)
+            LW.push_back(*iterA);
 
-        if (A[i] == k)
-            EQ.push_back(i);
+        if (*iterA == k)
+            EQ.push_back(*iterA);
 
-        if (A[i] > k)
-            GR.push_back(i);
+        if (*iterA > k)
+            GR.push_back(*iterA);
     }
     cout << "Index which is lower than k: " << k << endl;
-    for (auto i : LW)
-        cout << i << endl;
+    for (auto iter = LW.begin(); iter != LW.end(); iter++)
+        cout << *iter << endl;
 
     cout << "Index which is equal k: " << k << endl;
-    for (auto i : EQ)
-        cout << i << endl;
+    for (auto iter = EQ.begin(); iter != EQ.end(); iter++)
+        cout << *iter << endl;
 
     cout << "Index which is greater than k: " << k << endl;
-    for (auto i : GR)
-        cout << i << endl;
+    for (auto iter = GR.begin(); iter != GR.end(); iter++)
+        cout << *iter << endl;
 }
 
 
@@ -164,16 +165,17 @@ void task14_1AND14_2() {
     for (; index < j; index++)
         vecB.push_back(rand() % 100);
 
-    for (auto elA : vecA)
-        for (auto elB : vecB) {
-            cout << "elA: " << elA << ", elB: " << elB << endl;
-            if (elA == elB)
+    for (auto elA = vecA.begin(); elA != vecA.end(); elA++)
+        for (auto elB = vecB.begin(); elB != vecB.end(); elB++) {
+            if (*elA == *elB)
                 counterPairs++;
+            cout << "elA: " << *elA << ", elB: " << *elB << "    " << counterPairs << endl;
         }
+
     cout << "Equal pairs: " << endl;
     sort(vecA.begin(), vecA.end());
-    for (auto el : vecA)
-        cout << el << " ";
+    for (auto el = vecA.begin(); el != vecA.end(); el++)
+        cout << *el << " ";
     cout << endl;
 }
 
@@ -194,8 +196,8 @@ void task15_1AND15_2() {
     }
     sort(A.begin(), A.end());
     cout << "Elements in A" << endl;
-    for (int i : A)
-        cout << i << endl;
+    for (auto i = A.begin(); i != A.end(); i++)
+        cout << *i << endl;
     cout << endl;
 
 
