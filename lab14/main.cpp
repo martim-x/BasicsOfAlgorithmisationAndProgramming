@@ -40,7 +40,7 @@ void task4_8_1() {
         for (int j = 0; j < m; j++) {
             if (A[i][j] < B[i][j])
                 pairLW++;
-            if (A[i][j] = B[i][j])
+            if (A[i][j] == B[i][j])
                 pairEQ++;
             if (A[i][j] > B[i][j])
                 pairGR++;
@@ -74,15 +74,18 @@ void task4_8_2() {
         }
         cout << endl;
     }
-
+    bool flag = false;
     cout << "Rows with negative element: ";
     for (int i = 0; i < N; i++) {
+        if (flag)
+            break;
         for (int j = 0; j < M; j++) {
             if (*(*(matrix + i) + j) < 0 && i < M) {
                 cout << i + 1 << " ";
                 for (int k = 0; k < N; k++) {
-                    *(*(matrix + i) + j) /= 2;
+                    *(*(matrix + k) + i) /= 2;
                 }
+                flag = true;
                 break;
             }
         }
@@ -189,7 +192,6 @@ void task6_3() {
     cin >> n;
 
     vector<vector<int>> matrix(n, vector<int>(n));
-
 
     srand(time(0));
 

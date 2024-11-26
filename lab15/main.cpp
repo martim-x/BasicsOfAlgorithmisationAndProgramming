@@ -13,8 +13,13 @@ void task8_1() {
 
     srand(time(0));
 
+    int num;
+    bool flagZero = false;
     for (int i = 0; i < k; i++) {
-        A[i] = rand() % 101 - 50;
+        num = rand() % 21 - 10;
+        if (num == 0)
+            flagZero = true;
+        A[i] = num;
     }
 
     cout << "Array elements: ";
@@ -39,7 +44,10 @@ void task8_1() {
 
     }
     cout << "Number of positive elements: " << positiveCount << endl;
-    cout << "Sum of elements after last zero: " << sum << endl;
+    if (flagZero)
+        cout << "Sum of elements after last zero: " << sum << endl;
+    else
+        cout << "element equals zero doesn't exist" << endl;
 
 }
 
@@ -166,7 +174,7 @@ void task10_2() {
     srand(time(0));
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            matrix[i][j] = rand() % 21 - 10;
+            matrix[i][j] = rand() % 11 - 8;
             cout << matrix[i][j] << " ";
         }
         cout << endl;
@@ -185,7 +193,7 @@ void task10_2() {
 
         flag = true;
         for (int j = 0; j < cols; j++) {
-            if (matrix[i][j] > 0) {
+            if (matrix[i][j] >= 0) {
                 flag = false;
                 break;
             }
@@ -196,10 +204,11 @@ void task10_2() {
         cout << "No rows with all negative elements" << endl;
     }
     else {
-        cout << "Matrix with all elements: " << endl;
+        int buffer = matrix[index][0];
+        cout << endl << "Matrix with all elements: " << endl;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                matrix[i][j] += matrix[index][0];
+                matrix[i][j] += buffer;
                 cout << matrix[i][j] << " ";
             }
             cout << endl;
@@ -397,16 +406,16 @@ void task14_2() {
 
 int main() {
     task8_1();
-    task8_2();
+    // task8_2();
 
-    task10_1();
-    task10_2();
+    // task10_1();
+    // task10_2();
 
-    task11_1();
-    task11_2();
+    // task11_1();
+    // task11_2();
 
-    task14_1();
-    task14_2();
+    // task14_1();
+    // task14_2();
 
     return 0;
 }

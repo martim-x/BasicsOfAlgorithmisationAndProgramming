@@ -158,25 +158,28 @@ void task12_1() {
         for (int j = 0; j < p; j++) {
             matrix[i][j] = rand() % 21 - 10;
             cout << matrix[i][j] << " ";
-            if (min > matrix[i][j])
-                min = matrix[i][j];
         }
         cout << endl;
     }
-    cout << "Min element: " << min << endl << endl;
 
-    cout << "Modified matrix:" << endl;
     for (int i = 0; i < d; i++) {
-        for (int j = 0; j < p; j++) {
-            if (i == j)
-                matrix[i][j] = min;
+        for (int j = 0; j < p; j++)
+            if (matrix[i][j] < min)
+                min = matrix[i][j];
 
+        if (i < p)
+            matrix[i][i] = min;
+        min = INT_MAX;
+    }
+
+    cout << endl << "Modified matrix:" << endl;
+    for (int i = 0; i < d; i++) {
+        for (int j = 0; j < p; j++)
             cout << matrix[i][j] << " ";
-        }
+
         cout << endl;
     }
     cout << endl;
-
 }
 
 
