@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
 
@@ -16,7 +16,9 @@ void task8_1() {
     cout << "Array A: " << endl;
     srand(time(0));
     for (int i = 0; i < k; i++) {
-        num_buffer = rand() % 11 + 1;
+        num_buffer = rand() % 21 - 10;
+        if (num_buffer < 0)
+            num_buffer = pow(num_buffer, 2);
         A[i] = num_buffer;
         cout << A[i] << " ";
 
