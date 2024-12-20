@@ -3,7 +3,7 @@
 #include <set>
 #include <string>
 #include <cstdio>
-#include <cstdlib> // Для exit
+#include <cstdlib>
 using namespace std;
 
 void task8_1() {
@@ -12,7 +12,7 @@ void task8_1() {
     vector<int> nums;
     int num;
 
-    while (fscanf(inputFile, "%d", &num) == 1)
+    while (fscanf(inputFile, "%d", &num))
         nums.push_back(num);
 
     fclose(inputFile);
@@ -69,7 +69,7 @@ void task11_1() {
     set<int> numbers;
     int num;
 
-    while (fscanf(inputFile, "%d", &num) == 1)
+    while (fscanf(inputFile, "%d", &num))
         numbers.insert(num);
 
     for (const auto& val : numbers)
@@ -140,7 +140,7 @@ void task14_2() {
     set<int> numbers;
     int num;
 
-    while (fscanf(inputFile, "%d", &num) == 1)
+    while (fscanf(inputFile, "%d", &num))
         numbers.insert(num);
 
     for (const auto& val : numbers)
