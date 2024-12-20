@@ -17,7 +17,7 @@ void task8_1() {
 
     fclose(inputFile);
 
-    FILE* outputFile = fopen("tests/input8_1.txt", "w");
+    FILE* outputFile = fopen("tests/output8_1.txt", "w");
 
     int n = nums.size();
     for (int i = 0; i < (n + 1) / 2; i++) {
