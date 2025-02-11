@@ -12,9 +12,10 @@ void task8_1() {
     vector<int> nums;
     int num;
 
-    while (fscanf(inputFile, "%d", &num))
+    while (fscanf(inputFile, "%d", &num) != EOF) {
         nums.push_back(num);
-
+        cout << num << " ";
+    }
     fclose(inputFile);
 
     FILE* outputFile = fopen("tests/output8_1.txt", "w");
@@ -25,7 +26,6 @@ void task8_1() {
         if (i != n - 1 - i)
             fprintf(outputFile, "%d ", nums[n - 1 - i]);
     }
-
     fclose(outputFile);
 }
 
@@ -69,7 +69,7 @@ void task11_1() {
     set<int> numbers;
     int num;
 
-    while (fscanf(inputFile, "%d", &num))
+    while (fscanf(inputFile, "%d", &num) != EOF)
         numbers.insert(num);
 
     for (const auto& val : numbers)
@@ -140,7 +140,7 @@ void task14_2() {
     set<int> numbers;
     int num;
 
-    while (fscanf(inputFile, "%d", &num))
+    while (fscanf(inputFile, "%d", &num) != EOF)
         numbers.insert(num);
 
     for (const auto& val : numbers)
@@ -181,7 +181,7 @@ void task1_1() {
         return;
     }
 
-    vector<vector<int>> matrixC(rowsA, vector<int>(columnsB));
+    vector<vector<int> > matrixC(rowsA, vector<int>(columnsB));
     for (int i = 0; i < rowsA; i++)
         for (int j = 0; j < columnsB; j++)
             for (int k = 0; k < columnsA; k++)
@@ -204,7 +204,7 @@ void task1_2() {
     vector<int> numbers;
     int num;
 
-    while (fscanf(inputFile, "%d", &num) == 1)
+    while (fscanf(inputFile, "%d", &num) != EOF)
         numbers.push_back(num);
 
     fclose(inputFile);

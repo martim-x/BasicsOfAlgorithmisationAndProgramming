@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cmath>
 using namespace std;
 // chcp 65001 For Windows
 // export LANG=en_US.UTF-8 For Linux
