@@ -1,6 +1,13 @@
 {
     "files.associations": {
         "vector": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "iostream": "cpp",
+        "string": "cpp",
+        "ostream": "cpp",
+        "istream": "cpp",
+        "iosfwd": "cpp",
+        "fstream": "cpp",
+        "system_error": "cpp"
     }
 }
