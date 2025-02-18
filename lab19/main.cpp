@@ -6,6 +6,7 @@
 #include <cstdlib>
 using namespace std;
 
+
 void task8_1() {
     FILE* inputFile = fopen("tests/input8_1.txt", "r");
 

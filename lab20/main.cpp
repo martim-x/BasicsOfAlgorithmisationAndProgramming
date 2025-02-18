@@ -33,7 +33,6 @@ void task8_1() {
             count += mapLetters[symbol];
 
         if (symbol == '\n') {
-            cout << count << endl;
             vecCountIndexed.push_back(count);
             count = 0;
         }
@@ -69,26 +68,43 @@ void task8_1() {
 
 void task8_2() {
     string input;
-    cout << "Введите строку: ";
-    getline(cin, input);
+    ofstream inputFile("resource/input8_2.txt");
+    ofstream outputFile("resource/output8_2.txt");
 
+    getline(cin, input);
+    inputFile << input;
     for (int i = 0; i < input.length(); i++) {
         if (input[i] == '.') {
             if (i > 0 && i < input.length() - 1 && isdigit(input[i - 1]) && isdigit(input[i + 1])) {
                 int startApex = i - 1;
-                while (startApex > 0 && isdigit(input[startApex - 1])) startApex--;
-                if (startApex > 0 && (input[startApex - 1] == '+' || input[startApex - 1] == '-')) startApex--;
+                while (startApex > 0 && isdigit(input[startApex - 1]))
+                    startApex--;
+                if (startApex > 0 && (input[startApex - 1] == '+' || input[startApex - 1] == '-'))
+                    startApex--;
 
-                int end = i + 1;
-                while (end < input.length() && isdigit(input[end])) end++;
+                int endApex = i + 1;
+                while (endApex < input.length() && isdigit(input[endApex])) endApex++;
 
-                cout << "Найденное вещественное число: " << input.substr(startApex, end - startApex) << endl;
+                outputFile << "Найденное вещественное число: " << input.substr(startApex, endApex - startApex);
                 return;
             }
         }
     }
+    outputFile << "Вещественное число не найдено.";
+    outputFile.close();
+}
 
-    cout << "Вещественное число не найдено." << endl;
+
+void task11_1() {
+    ifstream inputFile("input11_1.txt");
+    string input;
+    while (getline(inputFile, input)){
+        for
+
+
+    }
+
+
 }
 
 int main() {
