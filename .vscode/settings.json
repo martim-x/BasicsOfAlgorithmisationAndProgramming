@@ -8,6 +8,9 @@
         "istream": "cpp",
         "iosfwd": "cpp",
         "fstream": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "xstring": "cpp",
+        "map": "cpp",
+        "utility": "cpp"
     }
 }
