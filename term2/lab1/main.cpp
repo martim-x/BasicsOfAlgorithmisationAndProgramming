@@ -55,8 +55,12 @@ void task1_2() {
     stringstream stream(inputLine);
     while (stream >> word) {
         bool isNumber = true;
+        bool SymbolFirst = true;
         for (char c : word) {
-            if (!isdigit(c)) {
+            if (SymbolFirst && (c == '-' || c == '+'))
+                SymbolFirst = false;
+
+            else if (!isdigit(c)) {
                 isNumber = false;
                 break;
             }
@@ -363,7 +367,6 @@ void task14_1() {
 }
 
 
-
 void task14_2() {
     cout << "*** TASK14~2 ***" << endl << endl;
 
@@ -402,8 +405,8 @@ void task14_2() {
 
 
 int main() {
-    //task1_1();//passed
-    //task1_2();//passed
+    // task1_1();//passed
+    task1_2();//passed
 
     // task8_1(); //passed
     // task8_2(); //passed
@@ -411,7 +414,7 @@ int main() {
     // task11_1(); //passed
     // task11_2(); //passed
 
-    task14_1();
-    task14_2();
+    // task14_1();
+    // task14_2();
     return 0;
 }
