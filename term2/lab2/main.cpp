@@ -1,113 +1,289 @@
 #include <iostream>
-#include <string>
 #include <vector>
-#include <map>
+#include <string>
 #include <fstream>
+#include <limits>
+#include <sstream>
+
 using namespace std;
 
-class Student {
-public:
-    string surname;
-    string first_name;
-    string last_name;
-    map<string, vector<int>> subjects;
-
-    Student() : surname(""), first_name(""), last_name("") {}
-
-    Student(const string& sn, const string& fn, const string& pt)
-        : surname(sn), first_name(fn), last_name(pt) {
-    }
-
-    void add_subject(const string& subject_name, const vector<int>& grades) {
-        for (auto grade : grades)
-            subjects[subject_name].push_back(grade);
-    }
-
-    double calculate_average(const string& subject_name) const {  // Marked const because it does not modify the object
-        int total = 0;
-        int count = 0;
-        if (subject_name == "ALL") {
-            for (const auto& subj : subjects) {
-                for (int grade : subj.second) {
-                    total += grade;
-                    count++;
-                }
-            }
-        }
-        else {
-            for (int grade : subjects.at(subject_name)) {  // Using at() to safely access the element
-                total += grade;
-                count++;
-            }
-        }
-
-        return (count > 0) ? double(total) / count : 0.0;
-    }
-
-    void print_info() const {  // Marked const because it does not modify the object
-        cout << "Surname: " << surname << endl;
-        cout << "First Name: " << first_name << endl;
-        cout << "Last_name: " << last_name << endl;
-        for (const auto& subject : subjects) {
-            cout << subject.first << ": ";
-            for (int grade : subject.second) {
-                cout << grade << " ";
-            }
-            cout << endl;
-        }
-        cout << "Average Grade: " << calculate_average("ALL") << endl;
-    }
+struct Student {
+    string name;
+    vector<vector<int>> grades;
 };
 
-class Form {
-public:
-    string form_name;
-    map<string, Student> students;
-
-    Form(const string& name) : form_name(name) {}
-
-    void add_student(const string& full_name, const Student& student) {
-        students[full_name] = student;
-    }
-
-    void remove_student(const string& full_name) {
-        students.erase(full_name);
-    }
-
-    void print_all_students() const {  // Marked const because it does not modify the object
-        if (students.empty()) {
-            cout << "No students in form " << form_name << "." << endl;
-            return;
-        }
-        cout << "Students in form " << form_name << ":\n";
-        for (const auto& student : students) {
-            student.second.print_info();
-            cout << "----------------------\n";
-        }
-    }
+struct SchoolClass {
+    string className;
+    vector<string> subjects;
+    vector<Student> students;
 };
 
-void show_menu() {
-    cout << "======================\n";
-    cout << "1. Add Form\n";
-    cout << "2. Add Student to Form\n";
-    cout << "3. View All Students in Form\n";
-    cout << "4. Delete Student from Form\n";
-    cout << "5. Search by Average Grade\n";
-    cout << "6. Save Data to Files\n";
-    cout << "7. Load Data from Files\n";
-    cout << "8. Exit\n";
-    cout << "======================\n";
-    cout << "Select an option: ";
+struct School {
+    vector<SchoolClass> classes;
+};
+
+// Функция для валидации ввода числа в диапазоне
+int inputValidatedInt(const string& prompt, int min = 0, int max = numeric_limits<int>::max()) {
+    int value;
+    while (true) {
+        cout << prompt;
+        string line;
+        getline(cin, line);
+        stringstream ss(line);
+
+        // Проверка, что введённое значение является числом и в пределах диапазона
+        if (ss >> value && ss.eof() && value >= min && value <= max) {
+            return value;
+        }
+        cout << "Invalid input! Please try again." << endl;
+    }
 }
 
-int main() {
-    map<string, Form> forms;
-    int choice;
-
+// Функция для валидации ввода строки (проверка на пустоту)
+string inputValidatedString(const string& prompt) {
+    string value;
     while (true) {
-        show_menu();
-        cin >> choice;
-        cin.ignore();
+        cout << prompt;
+        getline(cin, value);
+        if (!value.empty()) {
+            return value;
+        }
+        cout << "Input cannot be empty! Please try again." << endl;
+    }
+}
+
+
+void inputSchool(School& school) {
+    int numClasses = inputValidatedInt("Enter number of classes: ", 1);
+
+    for (int i = 0; i < numClasses; ++i) {
+        SchoolClass cls;
+        cls.className = inputValidatedString("Enter class name (e.g. 10-A): ");
+
+        int numSubjects = inputValidatedInt("Enter number of subjects: ", 1);
+        for (int j = 0; j < numSubjects; ++j) {
+            cls.subjects.push_back(
+                inputValidatedString("Enter subject #" + to_string(j + 1) + ": ")
+            );
+        }
+
+        int numStudents = inputValidatedInt("Enter number of students: ", 1);
+        for (int s = 0; s < numStudents; ++s) {
+            Student student;
+            student.name = inputValidatedString("Enter student name: ");
+
+            student.grades.resize(numSubjects);
+            for (int subjIdx = 0; subjIdx < numSubjects; ++subjIdx) {
+                int numGrades = inputValidatedInt(
+                    "How many grades for " + cls.subjects[subjIdx] + "? ", 1
+                );
+
+                for (int g = 0; g < numGrades; ++g) {
+                    student.grades[subjIdx].push_back(
+                        inputValidatedInt("Enter grade #" + to_string(g + 1) + ": ", 1, 12)
+                    );
+                }
+            }
+            cls.students.push_back(student);
+        }
+        school.classes.push_back(cls);
+    }
+}
+
+
+void printSchool(const School& school) {
+    for (const auto& cls : school.classes) {
+        cout << "\nClass: " << cls.className << endl;
+        cout << "Subjects: ";
+        for (const auto& subj : cls.subjects) {
+            cout << subj << ", ";
+        }
+
+        cout << "\nStudents:\n";
+        for (const auto& stud : cls.students) {
+            cout << "- " << stud.name << "\nGrades:\n";
+            for (size_t i = 0; i < stud.grades.size(); ++i) {
+                cout << "  " << cls.subjects[i] << ": ";
+                for (int grade : stud.grades[i]) {
+                    cout << grade << " ";
+                }
+                cout << endl;
+            }
+        }
+    }
+}
+
+
+void editGrades(School& school) {
+    if (school.classes.empty()) {
+        cout << "No classes available!" << endl;
+        return;
+    }
+
+    // Выбор класса
+    cout << "\nAvailable classes:\n";
+    for (int i = 0; i < school.classes.size(); ++i) {
+        cout << i + 1 << ". " << school.classes[i].className << endl;
+    }
+    int classIdx = inputValidatedInt("Select class: ", 1, school.classes.size()) - 1;
+
+    // Выбор студента
+    auto& students = school.classes[classIdx].students;
+    cout << "\nStudents in class:\n";
+    for (int i = 0; i < students.size(); ++i) {
+        cout << i + 1 << ". " << students[i].name << endl;
+    }
+    int studentIdx = inputValidatedInt("Select student: ", 1, students.size()) - 1;
+
+    // Выбор предмета
+    auto& subjects = school.classes[classIdx].subjects;
+    cout << "\nSubjects:\n";
+    for (int i = 0; i < subjects.size(); ++i) {
+        cout << i + 1 << ". " << subjects[i] << endl;
+    }
+    int subjIdx = inputValidatedInt("Select subject: ", 1, subjects.size()) - 1;
+
+    // Редактирование оценок
+    auto& grades = students[studentIdx].grades[subjIdx];
+    cout << "\nCurrent grades: ";
+    for (int grade : grades) cout << grade << " ";
+
+    cout << "\n1. Add grade\n2. Remove grade\n3. Edit grade\nChoose action: ";
+    int action = inputValidatedInt("", 1, 3);
+
+    switch (action) {
+    case 1:
+        grades.push_back(inputValidatedInt("Enter new grade: ", 1, 10));
+        break;
+    case 2: {
+        if (grades.empty()) {
+            cout << "No grades to remove!" << endl;
+            break;
+        }
+        int gradeIdx = inputValidatedInt("Enter grade position to remove: ", 1, grades.size()) - 1;
+        grades.erase(grades.begin() + gradeIdx);
+        break;
+    }
+    case 3: {
+        if (grades.empty()) {
+            cout << "No grades to edit!" << endl;
+            break;
+        }
+        int gradeIdx = inputValidatedInt("Enter grade position to edit: ", 1, grades.size()) - 1;
+        grades[gradeIdx] = inputValidatedInt("Enter new value: ", 1, 10);
+        break;
+    }
+    }
+}
+
+
+void saveToFile(const School& school, const string& filename) {
+    ofstream fout(filename);
+    if (!fout) {
+        cerr << "Error opening file!";
+        return;
+    }
+
+    fout << school.classes.size() << endl;
+    for (const auto& cls : school.classes) {
+        fout << cls.className << endl;
+
+        fout << cls.subjects.size() << endl;
+        for (const auto& subj : cls.subjects)
+            fout << subj << endl;
+
+        fout << cls.students.size() << endl;
+        for (const auto& stud : cls.students) {
+            fout << stud.name << endl;
+            for (const auto& subjectGrades : stud.grades) {
+                fout << subjectGrades.size() << " ";
+                for (int grade : subjectGrades) fout << grade << " ";
+                fout << endl;
+            }
+        }
+    }
+}
+
+
+void loadFromFile(School& school, const string& filename) {
+    ifstream fin(filename);
+    if (!fin) {
+        cerr << "Error opening file!" << endl;
+        return;
+    }
+
+    school.classes.clear();
+    int classCount;
+    fin >> classCount;
+    fin.ignore(numeric_limits<streamsize>::max(), '\n');  // Пропустить всё до новой строки
+
+    for (int i = 0; i < classCount; ++i) {
+        SchoolClass cls;
+        getline(fin, cls.className);  // Считываем имя класса
+
+        int subjCount;
+        fin >> subjCount;
+        fin.ignore(numeric_limits<streamsize>::max(), '\n');  // Пропустить всё до новой строки
+
+        cls.subjects.resize(subjCount);
+        for (int j = 0; j < subjCount; ++j) {
+            getline(fin, cls.subjects[j]);  // Считываем предметы
+        }
+
+        int studCount;
+        fin >> studCount;
+        fin.ignore(numeric_limits<streamsize>::max(), '\n');  // Пропустить всё до новой строки
+
+        for (int s = 0; s < studCount; ++s) {
+            Student stud;
+            getline(fin, stud.name);  // Считываем имя студента
+
+            stud.grades.resize(subjCount);  // Инициализируем вектор оценок
+
+            for (int g = 0; g < subjCount; ++g) {
+                int gradeCount;
+                fin >> gradeCount;  // Количество оценок
+
+                stud.grades[g].resize(gradeCount);
+                for (int k = 0; k < gradeCount; ++k) {
+                    fin >> stud.grades[g][k];  // Считываем оценки
+                }
+                // Пропустить оставшиеся символы до конца строки
+                fin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+
+            cls.students.push_back(stud);  // Добавляем студента
+        }
+
+        school.classes.push_back(cls);  // Добавляем класс в школу
+    }
+}
+
+
+void showMenu() {
+    cout << "\n1. Add class\n"
+        << "2. Show data\n"
+        << "3. Save to file\n"
+        << "4. Load from file\n"
+        << "5. Edit grades\n"
+        << "6. Exit\n"
+        << "Choice: ";
+}
+
+
+int main() {
+    School school;
+    while (true) {
+        showMenu();
+        int choice = inputValidatedInt("", 1, 6);
+
+        switch (choice) {
+        case 1: inputSchool(school); break;
+        case 2: printSchool(school); break;
+        case 3: saveToFile(school, "school.txt"); break;
+        case 4: loadFromFile(school, "school.txt"); break;
+        case 5: editGrades(school); break;
+        case 6: return 0;
+        }
     }
 }
