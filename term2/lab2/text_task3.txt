@@ -1,0 +1,24 @@
+1. Sanatorium name: Heart Care"
+   Location: "Mountain Resort"
+   Treatment Profile: "Cardiology"
+   Vouchers: 15
+
+2. Sanatorium name: "Bone Clinic"
+   Location: "Forest Center"
+   Treatment Profile: "Orthopedics"
+   Vouchers: 20
+
+3. Sanatorium name: "Skin Health"
+   Location: "Beach Resort"
+   Treatment Profile: "Dermatology"
+   Vouchers: 8
+
+4. Sanatorium name: "Joint Wellness"
+   Location: "Lakeside Retreat"
+   Treatment Profile: "Orthopedics"
+   Vouchers: 12
+
+5. Sanatorium name: "Vascular Health"
+   Location: "Coastal Clinic"
+   Treatment Profile: "Cardiology"
+   Vouchers: 10

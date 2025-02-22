@@ -80,7 +80,7 @@ void inputSchool(School& school) {
 
                 for (int g = 0; g < numGrades; ++g) {
                     student.grades[subjIdx].push_back(
-                        inputValidatedInt("Enter grade #" + to_string(g + 1) + ": ", 1, 12)
+                        inputValidatedInt("Enter grade #" + to_string(g + 1) + ": ", 1, 10)
                     );
                 }
             }
@@ -260,13 +260,111 @@ void loadFromFile(School& school, const string& filename) {
 }
 
 
+void displaySubjectAverage(const School& school) {
+    if (school.classes.empty()) {
+        cout << "No classes available!" << endl;
+        return;
+    }
+
+    // Выбор класса
+    cout << "\nAvailable classes:\n";
+    for (int i = 0; i < school.classes.size(); ++i) {
+        cout << i + 1 << ". " << school.classes[i].className << endl;
+    }
+    int classIdx = inputValidatedInt("Select class: ", 1, school.classes.size()) - 1;
+
+    const SchoolClass& cls = school.classes[classIdx];
+
+    // Выбор предмета
+    cout << "\nSubjects in class " << cls.className << ":\n";
+    for (int i = 0; i < cls.subjects.size(); ++i) {
+        cout << i + 1 << ". " << cls.subjects[i] << endl;
+    }
+    int subjIdx = inputValidatedInt("Select subject: ", 1, cls.subjects.size()) - 1;
+
+    const string& subject = cls.subjects[subjIdx];
+
+    // Вычисление общего среднего балла
+    double totalSum = 0.0;
+    int studentCount = 0;
+
+    for (const Student& student : cls.students) {
+        const vector<int>& grades = student.grades[subjIdx];
+        if (grades.empty()) {
+            continue;
+        }
+        double sum = 0.0;
+        for (int grade : grades) {
+            sum += grade;
+        }
+        double avg = sum / grades.size();
+        totalSum += avg;
+        studentCount++;
+    }
+
+    if (studentCount == 0) {
+        cout << "No students with grades in " << subject << "." << endl;
+        return;
+    }
+
+    double classAverage = totalSum / studentCount;
+
+    cout << "\nAverage grade in " << subject << " for class " << cls.className << ": " << classAverage << endl;
+
+    // Сбор студентов выше и ниже среднего
+    vector<string> aboveAverage;
+    vector<string> belowAverage;
+
+    for (const Student& student : cls.students) {
+        const vector<int>& grades = student.grades[subjIdx];
+        if (grades.empty()) {
+            continue;
+        }
+        double sum = 0.0;
+        for (int grade : grades) {
+            sum += grade;
+        }
+        double avg = sum / grades.size();
+
+        if (avg > classAverage) {
+            aboveAverage.push_back(student.name);
+        }
+        else if (avg < classAverage) {
+            belowAverage.push_back(student.name);
+        }
+    }
+
+    // Вывод результатов
+    cout << "\nStudents above average:\n";
+    if (aboveAverage.empty()) {
+        cout << "None\n";
+    }
+    else {
+        for (const string& name : aboveAverage) {
+            cout << "- " << name << endl;
+        }
+    }
+
+    cout << "\nStudents below average:\n";
+    if (belowAverage.empty()) {
+        cout << "None\n";
+    }
+    else {
+        for (const string& name : belowAverage) {
+            cout << "- " << name << endl;
+        }
+    }
+}
+
+
 void showMenu() {
     cout << "\n1. Add class\n"
         << "2. Show data\n"
         << "3. Save to file\n"
         << "4. Load from file\n"
         << "5. Edit grades\n"
-        << "6. Exit\n"
+        << "6. Display subject average\n"
+        << "7. Exit\n"
         << "Choice: ";
 }
 
@@ -275,7 +373,7 @@ int main() {
     School school;
     while (true) {
         showMenu();
-        int choice = inputValidatedInt("", 1, 6);
+        int choice = inputValidatedInt("", 1, 7);
 
         switch (choice) {
         case 1: inputSchool(school); break;
@@ -283,7 +381,8 @@ int main() {
         case 3: saveToFile(school, "school.txt"); break;
         case 4: loadFromFile(school, "school.txt"); break;
         case 5: editGrades(school); break;
-        case 6: return 0;
+        case 6: displaySubjectAverage(school); break;
+        case 7: return 0;
         }
     }
 }
