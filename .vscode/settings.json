@@ -22,6 +22,9 @@
         "forward_list": "cpp",
         "xlocinfo": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "limits": "cpp",
+        "ostream": "cpp",
+        "iomanip": "cpp"
     }
 }

@@ -378,8 +378,8 @@ int main() {
         switch (choice) {
         case 1: inputSchool(school); break;
         case 2: printSchool(school); break;
-        case 3: saveToFile(school, "school.txt"); break;
-        case 4: loadFromFile(school, "school.txt"); break;
+        case 3: saveToFile(school, "task4_8.txt"); break;
+        case 4: loadFromFile(school, "task4_8.txt"); break;
         case 5: editGrades(school); break;
         case 6: displaySubjectAverage(school); break;
         case 7: return 0;

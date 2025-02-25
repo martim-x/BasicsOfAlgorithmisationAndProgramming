@@ -1,0 +1,36 @@
+2
+information system of tech
+2
+math
+basic learning algo
+2
+Marushko
+Tim
+EMPTY
+8
+7 
+Kostukevich
+Kiril
+EMPTY
+5
+6 
+Program eng
+2
+math
+history
+3
+Katlin
+Katlin-name
+EMPTY
+2
+4 
+Jam
+jam-name
+EMPTY
+5
+4 
+Lok
+Lok-name
+Lok-lastname
+4
+4

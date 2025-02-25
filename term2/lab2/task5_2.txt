@@ -1,0 +1,39 @@
+Train #1
+Destination: Minsk
+Train number (0.1-9999.9): 1.3131231321
+Departure time (HH:MM): 1:00
+
+Train #2
+Destination: Paris
+Train number (0.1-9999.9): 50.4
+Departure time (HH:MM): 14:30
+
+Train #3
+Destination: Rome
+Train number (0.1-9999.9): 90.99
+Departure time (HH:MM): 09:15
+
+Train #4
+Destination: New York
+Train number (0.1-9999.9): 110.5
+Departure time (HH:MM): 22:00
+
+Train #5
+Destination: Los Angeles
+Train number (0.1-9999.9): 32.2
+Departure time (HH:MM): 06:45
+
+Train #6
+Destination: Tokyo
+Train number (0.1-9999.9): 75.7
+Departure time (HH:MM): 20:00
+
+Train #7
+Destination: Berlin
+Train number (0.1-9999.9): 125.12
+Departure time (HH:MM): 13:30
+
+Train #8
+Destination: Sydney
+Train number (0.1-9999.9): 222.9
+Departure time (HH:MM): 05:00
