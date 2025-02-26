@@ -43,31 +43,54 @@ int inputValidatedInt(const string& prompt, int min = 0, int max = INT32_MAX) {
     }
 }
 
+bool isValidName(const string& name) {
+    if (name.empty()) return false;
+
+    // Регулярное выражение: Каждое слово начинается с двух заглавных букв, затем только маленькие буквы
+    regex namePattern(R"(^([A-Z]{2}[a-z]*)([- ][A-Z]{2}[a-z]*)*$)");
+
+    return regex_match(name, namePattern);
+}
+
+string inputValidatedName(const string& prompt, bool canBeEmpty = false) {
+    string name;
+    while (true) {
+        cout << prompt;
+        getline(cin, name);
+
+        if (name.empty() && canBeEmpty) return "EMPTY";
+
+        if (isValidName(name)) return name;
+
+        cout << "Invalid input!\n";
+    }
+}
+
+
 
 bool isValidString(const string& str, const string& allowedChars, bool canBeEmpty) {
-    if (canBeEmpty && str.empty())
-        return true;
+    if (canBeEmpty && str.empty()) return true;
+    if (str.empty()) return false;
 
-    if (str.empty())
-        return false;
+    bool hasAlpha = false;  // Флаг наличия хотя бы одной буквы
+    char c_prev = '\0';
 
-    char c_prev = str[0];
     for (size_t i = 0; i < str.length(); i++) {
         char c = str[i];
 
-
-        if ((i == 0 || i == str.length() - 1) && allowedChars.find(c) != string::npos)
+        if (isalpha(c)) {
+            hasAlpha = true;
+        }
+        else if (allowedChars.find(c) == string::npos) {
             return false;
-
-        if (!isalpha(c)) {
-            if (allowedChars.find(c) == string::npos)
-                return false;
-            if (allowedChars.find(c) != string::npos && c_prev == c)
-                return false;
+        }
+        else if (c == c_prev) { // Запрещаем повторяющиеся допустимые символы (например, "--")
+            return false;
         }
         c_prev = c;
     }
-    return true;
+
+    return hasAlpha; // Должна быть хотя бы одна буква
 }
 
 // Ввод строки с валидацией
@@ -104,7 +127,6 @@ void printUniversity(const University& university) {
     }
 }
 
-
 // Ввод данных об университете
 void inputUniversity(University& university) {
     int numGroups;
@@ -112,13 +134,13 @@ void inputUniversity(University& university) {
 
     for (int i = 0; i < numGroups; ++i) {
         Group group;
-        group.groupName = inputValidatedString("Enter group name: ", " ", false);
+        group.groupName = inputValidatedString("Enter group name: ", "123456789 -", false);
 
         int numSubjects;
         numSubjects = inputValidatedInt("Enter number of subjects: ", 0);
 
         for (int j = 0; j < numSubjects; ++j) {
-            group.subjects.push_back(inputValidatedString("Enter subject name: ", " ", false));
+            group.subjects.push_back(inputValidatedString("Enter subject name: ", "123456789 -", false));
         }
 
         int numStudents;
@@ -126,9 +148,9 @@ void inputUniversity(University& university) {
 
         for (int s = 0; s < numStudents; ++s) {
             Student student;
-            student.surName = inputValidatedString("Enter surname name: ", " -", false);
-            student.firstName = inputValidatedString("Enter first name: ", " -", false);
-            student.lastName = inputValidatedString("Enter last name: ", " -", true);
+            student.surName = inputValidatedName("Enter surname name: ");
+            student.firstName = inputValidatedName("Enter first name: ");
+            student.lastName = inputValidatedName("Enter last name: ", true);
 
 
             for (int subjIdx = 0; subjIdx < numSubjects; ++subjIdx) {
@@ -301,14 +323,14 @@ int main() {
     University university;
     while (true) {
         showMenu();
-        int choice = inputValidatedInt("", 1, 6); 
+        int choice = inputValidatedInt("", 1, 6);
 
         switch (choice) {
         case 1: inputUniversity(university); break;
         case 2: printUniversity(university); break;
         case 3: saveToFile(university, "task5_1.txt"); break;
         case 4: loadFromFile(university, "task5_1.txt"); break;
-        case 5: calculateSuccessRate(university); break;  
+        case 5: calculateSuccessRate(university); break;
         case 6:
             system("pause");
             return 0;
