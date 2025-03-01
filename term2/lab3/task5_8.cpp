@@ -9,7 +9,7 @@
 
 using namespace std;
 
-// Перечисление для пунктов назначения
+
 enum Destination {
     MOSCOW, PARIS, LONDON, NEW_YORK,
     TOKYO, DUBAI, BEIJING, SYDNEY, DESTINATION_COUNT
@@ -20,7 +20,7 @@ const string destinations[] = {
     "Tokyo", "Dubai", "Beijing", "Sydney"
 };
 
-// Объединение для номера рейса
+
 union FlightNumber {
     struct {
         char airline[3];
@@ -29,11 +29,11 @@ union FlightNumber {
     unsigned int numeric;
 };
 
-// Битовая структура для даты
+
 struct Date {
-    unsigned int day : 5;    // 1-31
-    unsigned int month : 4;  // 1-12
-    unsigned int year : 14;  // 2000-2099
+    unsigned int day : 5;
+    unsigned int month : 4;
+    unsigned int year : 14;
 };
 
 struct Flight {

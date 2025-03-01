@@ -8,10 +8,12 @@
 #include <algorithm>
 #include <cctype>
 #include <fstream>
+#include "validators.h"
+
 
 using namespace std;
 
-// Перечисление для типов кузова
+
 enum BodyType {
     SEDAN,
     UNIVERSAL,
@@ -23,6 +25,7 @@ enum BodyType {
     BODYTYPE_COUNT
 };
 
+
 const char* bodyTypeNames[] = {
     "Sedan",
     "Universal",
@@ -33,18 +36,19 @@ const char* bodyTypeNames[] = {
     "Pickup"
 };
 
-// Битовая структура для даты
+
 struct Date {
     unsigned int day : 5;
     unsigned int month : 4;
     unsigned int year : 14;
 };
 
-// Перегрузка оператора вывода для Date
+
 ostream& operator<<(ostream& os, const Date& d) {
     os << d.day << "/" << d.month << "/" << d.year;
     return os;
 }
+
 
 struct Car {
     string brand;
@@ -56,7 +60,7 @@ struct Car {
     string owner;
 };
 
-// Прототипы функций
+
 BodyType inputBodyType();
 Date inputDate(const string& prompt);
 void printCar(const Car& c);
@@ -101,7 +105,6 @@ int main() {
     }
 }
 
-// Валидация целых чисел
 int inputValidatedInt(const string& prompt, int min, int max) {
     int value;
     while (true) {
@@ -109,14 +112,13 @@ int inputValidatedInt(const string& prompt, int min, int max) {
         string line;
         getline(cin, line);
         stringstream ss(line);
-
         if (ss >> value && value >= min && value <= max && ss.eof())
             return value;
         cout << "Invalid input! Enter integer between " << min << " and " << max << endl;
     }
 }
 
-// Валидация строк
+
 bool validateString(const string& input, const string& pattern, size_t exactLength) {
     if (exactLength != 0 && input.length() != exactLength)
         return false;
@@ -126,6 +128,7 @@ bool validateString(const string& input, const string& pattern, size_t exactLeng
     }
     return !input.empty();
 }
+
 
 string inputValidatedString(const string& prompt, const string& pattern, size_t exactLength) {
     string value;
@@ -141,7 +144,7 @@ string inputValidatedString(const string& prompt, const string& pattern, size_t 
     }
 }
 
-// Ввод типа кузова
+
 BodyType inputBodyType() {
     cout << "Select body type:\n"
         << "1. Sedan\n2. Universal\n3. Hatchback\n4. Coupe\n"
@@ -149,33 +152,23 @@ BodyType inputBodyType() {
     return static_cast<BodyType>(inputValidatedInt("Choice (1-7): ", 1, 7) - 1);
 }
 
-// Ввод даты
-// Проверка, является ли год високосным
+
 bool isLeapYear(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
-// Проверка, является ли дата корректной
+
 bool isValidDate(int day, int month, int year) {
-    // Количество дней в каждом месяце
     const int daysInMonth[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-    // Проверка диапазона месяца
     if (month < 1 || month > 12) return false;
-
-    // Получаем максимальное количество дней в месяце
     int maxDays = daysInMonth[month];
-
-    // Учитываем високосный год для февраля
     if (month == 2 && isLeapYear(year)) {
         maxDays = 29;
     }
-
-    // Проверяем, входит ли день в допустимый диапазон
     return day >= 1 && day <= maxDays;
 }
 
-// Ввод даты с проверкой корректности
+
 Date inputValidatedDate(const string& prompt) {
     cout << prompt << endl;
     Date d;
@@ -194,7 +187,7 @@ Date inputValidatedDate(const string& prompt) {
     }
 }
 
-// Добавление автомобиля
+
 void addCar(vector<Car>& cars) {
     Car c;
     c.brand = inputValidatedString("Brand: ", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -", 0);
@@ -208,7 +201,7 @@ void addCar(vector<Car>& cars) {
     cars.push_back(c);
 }
 
-// Вывод информации об автомобиле
+
 void printCar(const Car& c) {
     cout << "------------------------------------------------------" << endl;
     cout << "| Brand: " << c.brand << endl;
@@ -221,7 +214,7 @@ void printCar(const Car& c) {
     cout << "------------------------------------------------------" << endl;
 }
 
-// Поиск по владельцу
+
 void searchByOwner(const vector<Car>& cars) {
     string owner = inputValidatedString("Enter owner name: ", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ", 0);
     bool found = false;
@@ -238,7 +231,7 @@ void searchByOwner(const vector<Car>& cars) {
     }
 }
 
-// Удаление автомобиля
+
 void deleteCar(vector<Car>& cars) {
     string serial = inputValidatedString("Enter serial number to delete: ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 10);
 
@@ -253,6 +246,7 @@ void deleteCar(vector<Car>& cars) {
         cout << "Car not found\n";
     }
 }
+
 
 void saveToFile(const vector<Car>& cars, const string& filename) {
     ofstream file(filename, ios::binary);
@@ -284,6 +278,7 @@ void saveToFile(const vector<Car>& cars, const string& filename) {
     cout << "Data saved to " << filename << endl;
 }
 
+
 void loadFromFile(vector<Car>& cars, const string& filename) {
     ifstream file(filename, ios::binary);
     if (!file) {
@@ -296,27 +291,22 @@ void loadFromFile(vector<Car>& cars, const string& filename) {
         Car c;
         size_t size;
 
-        // Чтение бренда
         if (!file.read(reinterpret_cast<char*>(&size), sizeof(size))) break;
         c.brand.resize(size);
         file.read(&c.brand[0], size);
 
-        // Чтение цвета
         file.read(reinterpret_cast<char*>(&size), sizeof(size));
         c.color.resize(size);
         file.read(&c.color[0], size);
 
-        // Чтение серийного номера
         char serialBuffer[10];
         file.read(serialBuffer, 10);
         c.serialNumber.assign(serialBuffer, 10);
 
-        // Чтение дат
         file.read(reinterpret_cast<char*>(&c.manufactureDate), sizeof(c.manufactureDate));
         file.read(reinterpret_cast<char*>(&c.bodyType), sizeof(c.bodyType));
         file.read(reinterpret_cast<char*>(&c.lastInspection), sizeof(c.lastInspection));
 
-        // Чтение владельца
         file.read(reinterpret_cast<char*>(&size), sizeof(size));
         c.owner.resize(size);
         file.read(&c.owner[0], size);
