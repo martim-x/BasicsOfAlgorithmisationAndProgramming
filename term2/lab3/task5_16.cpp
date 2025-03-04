@@ -4,125 +4,90 @@
 #include <fstream>
 #include <sstream>
 #include <limits>
-#include <cstdio>    // Для sprintf
+#include <cstdio>
 #include <cstdlib>
+#include "validators.h"
 
 using namespace std;
 
-//===============================
-// Валидаторы ввода
-//===============================
 
-// Валидация целого числа
-int inputValidatedInt(const string& prompt, int min = 0, int max = numeric_limits<int>::max()) {
-    int value;
-    while (true) {
-        cout << prompt;
-        string line;
-        getline(cin, line);
-        stringstream ss(line);
-        if (ss >> value && ss.eof() && value >= min && value <= max)
-            return value;
-        cout << "Invalid input! Please try again." << endl;
-    }
-}
-
-// Валидация вещественного числа
-double inputValidatedDouble(const string& prompt, double min, double max) {
-    double value;
-    while (true) {
-        cout << prompt;
-        string line;
-        getline(cin, line);
-        stringstream ss(line);
-        if (ss >> value && ss.eof() && value >= min && value <= max)
-            return value;
-        cout << "Invalid input! Please try again." << endl;
-    }
-}
-
-// Проверка строки на допустимые символы (разрешены буквы, пробел и дефис)
-bool isValidString(const string& str, const string& allowedChars, bool canBeEmpty) {
-    if (canBeEmpty && str.empty())
-        return true;
-    if (str.empty())
-        return false;
-    // Допускаем буквы (isalpha) и символы из allowedChars
-    for (char c : str) {
-        if (!isalpha(c) && allowedChars.find(c) == string::npos)
-            return false;
-    }
-    return true;
-}
-
-// Валидация ввода строки с проверкой на пустоту и допустимые символы
-string inputValidatedString(const string& prompt, const string& allowedChars, bool canBeEmpty, const string& strReplaced = "EMPTY") {
-    string value;
-    while (true) {
-        cout << prompt;
-        getline(cin, value);
-        if (isValidString(value, allowedChars, canBeEmpty)) {
-            if (value.empty())
-                return strReplaced;
-            return value;
-        }
-        cout << "Invalid input! Allowed characters: letters and these symbols: " << allowedChars << endl;
-    }
-}
-
-//===============================
-// Структура данных
-//===============================
-
-// Объединение для хранения даты поступления.
-// Реализовано двумя способами:
-// - как структура с полями day, month, year
-// - как символьный массив dateStr для хранения даты в формате "DD/MM/YYYY"
 union AdmissionDate {
     struct {
         int day;
         int month;
         int year;
     } parts;
-    char dateStr[11];  // Формат: "DD/MM/YYYY" (10 символов + завершающий ноль)
+    char dateStr[11];
 };
+
 
 struct StudentRecord {
-    string fullName;         // Ф.И.О.
-    AdmissionDate admitDate; // Дата поступления
-    string specialization;   // Специальность
-    string group;            // Группа
-    string faculty;          // Факультет
-    double averageGrade;     // Средний балл
+    string first_name;
+    string sur_name;
+    string last_name;
+    AdmissionDate admitDate;
+    string specialization;
+    int group;
+    string faculty;
+    double averageGrade;
 };
 
-//===============================
-// Функции работы с данными
-//===============================
 
-// Ввод данных о студенте
+bool isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+
+bool isValidAdmissionDate(int day, int month, int year) {
+
+    if (year < 1900 || year > 2100) return false;
+
+    if (month < 1 || month > 12) return false;
+
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+    if (month == 2 && isLeapYear(year)) {
+        daysInMonth[1] = 29;
+    }
+
+    return (day >= 1 && day <= daysInMonth[month - 1]);
+}
+
+
 StudentRecord inputStudent() {
     StudentRecord s;
-    // Разрешаем буквы, пробел и дефис (allowedChars: " -")
-    s.fullName = inputValidatedString("Enter student's full name (letters, space, hyphen): ", " -", false);
+    s.first_name = inputValidatedName("Enter first name: ", false);
+    s.sur_name = inputValidatedName("Enter sur name: ", false);
+    s.last_name = inputValidatedName("Enter last name: ", true);
 
-    // Ввод даты поступления (вводим отдельно день, месяц, год, затем форматируем)
-    int day = inputValidatedInt("Enter admission day (1-31): ", 1, 31);
-    int month = inputValidatedInt("Enter admission month (1-12): ", 1, 12);
-    int year = inputValidatedInt("Enter admission year (e.g. 2000-2100): ", 1900, 2100);
-    // Форматирование даты в строку
+    int day, month, year;
+    do {
+        day = inputValidatedInt("Enter admission day (1-31): ", 1, 31);
+        month = inputValidatedInt("Enter admission month (1-12): ", 1, 12);
+        year = inputValidatedInt("Enter admission year (1900-2100): ", 1900, 2100);
+
+        if (!isValidAdmissionDate(day, month, year)) {
+            cout << "Invalid date! Please enter a valid date.\n";
+        }
+    } while (!isValidAdmissionDate(day, month, year));
+
+    s.admitDate.parts.day = day;
+    s.admitDate.parts.month = month;
+    s.admitDate.parts.year = year;
     sprintf(s.admitDate.dateStr, "%02d/%02d/%04d", day, month, year);
 
-    s.specialization = inputValidatedString("Enter specialization: ", " -", false);
-    s.group = inputValidatedString("Enter group: ", " -", false);
+    s.specialization = inputValidatedString("Enter specialization: ", " -0123456789", false);
+    s.group = inputValidatedInt("Enter group: ", 1, 10);
     s.faculty = inputValidatedString("Enter faculty: ", " -", false);
     s.averageGrade = inputValidatedDouble("Enter average grade (0.0 - 10.0): ", 0.0, 10.0);
     return s;
 }
 
-// Вывод информации о студенте
+
 void printStudent(const StudentRecord& s) {
-    cout << "Full Name      : " << s.fullName << "\n"
+    cout << "First Name      : " << s.first_name << "\n"
+        << "Sur Name      : " << s.sur_name << "\n"
+        << "Last Name      : " << s.last_name << "\n"
         << "Admission Date : " << s.admitDate.dateStr << "\n"
         << "Specialization : " << s.specialization << "\n"
         << "Group          : " << s.group << "\n"
@@ -130,7 +95,7 @@ void printStudent(const StudentRecord& s) {
         << "Average Grade  : " << s.averageGrade << "\n";
 }
 
-// Вывод всех записей
+
 void printAllStudents(const vector<StudentRecord>& students) {
     if (students.empty()) {
         cout << "No student records available." << endl;
@@ -143,17 +108,18 @@ void printAllStudents(const vector<StudentRecord>& students) {
     cout << "----------------------------------\n";
 }
 
-// Запись данных в файл
+
 void saveToFile(const vector<StudentRecord>& students, const string& filename) {
     ofstream fout(filename);
     if (!fout) {
         cerr << "Error opening file for writing!" << endl;
         return;
     }
-    // Сначала записываем количество записей
     fout << students.size() << "\n";
     for (const auto& s : students) {
-        fout << s.fullName << "\n";
+        fout << s.first_name << "\n";
+        fout << s.sur_name << "\n";
+        fout << s.last_name << "\n";
         fout << s.admitDate.dateStr << "\n";
         fout << s.specialization << "\n";
         fout << s.group << "\n";
@@ -164,7 +130,7 @@ void saveToFile(const vector<StudentRecord>& students, const string& filename) {
     cout << "Data saved to " << filename << endl;
 }
 
-// Чтение данных из файла
+
 void loadFromFile(vector<StudentRecord>& students, const string& filename) {
     ifstream fin(filename);
     if (!fin) {
@@ -177,11 +143,14 @@ void loadFromFile(vector<StudentRecord>& students, const string& filename) {
     fin.ignore(numeric_limits<streamsize>::max(), '\n');
     for (size_t i = 0; i < count; i++) {
         StudentRecord s;
-        getline(fin, s.fullName);
-        // Чтение даты поступления в массив символов
+        getline(fin, s.first_name);
+        getline(fin, s.sur_name);
+        getline(fin, s.last_name);
+
         fin.getline(s.admitDate.dateStr, sizeof(s.admitDate.dateStr));
         getline(fin, s.specialization);
-        getline(fin, s.group);
+        fin >> s.group;
+        fin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(fin, s.faculty);
         fin >> s.averageGrade;
         fin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -191,7 +160,7 @@ void loadFromFile(vector<StudentRecord>& students, const string& filename) {
     cout << "Data loaded from " << filename << endl;
 }
 
-// Поиск студентов по среднему баллу (выводятся все записи, у которых средний балл >= введённого порога)
+
 void searchByAverageGrade(const vector<StudentRecord>& students) {
     if (students.empty()) {
         cout << "No student records available." << endl;
@@ -212,9 +181,7 @@ void searchByAverageGrade(const vector<StudentRecord>& students) {
     }
 }
 
-//===============================
-// Меню программы
-//===============================
+
 void showMenu() {
     cout << "\n=== Student Information System ===\n"
         << "1. Add Student Record\n"
@@ -225,6 +192,7 @@ void showMenu() {
         << "6. Exit\n"
         << "Choice: ";
 }
+
 
 int main() {
     vector<StudentRecord> students;

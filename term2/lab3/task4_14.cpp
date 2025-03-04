@@ -1,3 +1,4 @@
+// УДОСТОВЕРИТЬСЯ НА НУЖНОСТЬ ИМПРОТОВ ЗАВИСИМОСТЕЙ
 #include <iostream>
 #include <string>
 #include <vector>
@@ -7,10 +8,11 @@
 #include <cctype>
 #include <fstream>
 #include <limits>
+#include <regex>
+#include "validators.h"
 
 using namespace std;
 
-// Перечисление для типа размещения
 enum AccommodationType {
     LUXURY,
     SINGLE,
@@ -20,11 +22,12 @@ enum AccommodationType {
     ACCOMMODATION_COUNT
 };
 
+
 const string accommodationTypes[] = {
     "Luxury", "Single", "Double", "Triple", "Apartment"
 };
 
-// Битовая структура для даты
+
 struct Date {
     unsigned int day : 5;
     unsigned int month : 4;
@@ -37,7 +40,11 @@ struct Date {
     }
 };
 
+
 struct HotelGuest {
+    string first_name;
+    string sur_name;
+    string last_name;
     string passport;
     Date arrivalDate;
     Date departureDate;
@@ -45,7 +52,7 @@ struct HotelGuest {
     AccommodationType accommodation;
 };
 
-// Прототипы функций
+
 Date inputDate(const string& prompt);
 void printGuest(const HotelGuest& g);
 void addGuest(vector<HotelGuest>& guests);
@@ -57,6 +64,7 @@ bool validateDates(const Date& arrival, const Date& departure);
 string formatDate(const Date& d);
 
 vector<HotelGuest> guests;
+
 
 int main() {
     while (true) {
@@ -80,82 +88,84 @@ int main() {
     }
 }
 
+
 string formatDate(const Date& d) {
     stringstream ss;
     ss << setfill('0')
         << setw(2) << d.day << "/"
         << setw(2) << d.month << "/"
-        << (d.year + 2000); // Восстанавливаем полный год
+        << (d.year + 2000);
     return ss.str();
 }
 
-Date inputDate(const string& prompt) {
-    cout << prompt << endl;
-    Date d;
-    d.day = inputValidatedInt("Day (1-31): ", 1, 31);
-    d.month = inputValidatedInt("Month (1-12): ", 1, 12);
-    d.year = inputValidatedInt("Year (2000-2099): ", 2000, 2099) - 2000;
-    return d;
+
+bool isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
-bool validatePassport(const string& input) {
-    // Формат: 4 буквы, 6 цифр (с пробелом или без)
-    if (input.length() != 10 && input.length() != 11) return false;
 
-    for (size_t i = 0; i < input.size(); ++i) {
-        if (i < 4 && !isalpha(input[i])) return false;
-        if (i == 4 && input[i] != ' ' && input.length() == 11) return false;
-        if (i >= 4 + (input.length() == 11) && !isdigit(input[i])) return false;
+bool isValidDate(int day, int month, int year) {
+    if (month < 1 || month > 12) return false;
+
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int maxDay = daysInMonth[month - 1];
+
+    if (month == 2 && isLeapYear(year)) {
+        maxDay = 29;
     }
-    return true;
+
+    return day >= 1 && day <= maxDay;
 }
 
-string inputPassport() {
-    string passport;
+
+Date inputDate(const string& prompt) {
     while (true) {
-        cout << "Passport (AAAA 123456 or AAAA123456): ";
-        getline(cin, passport);
+        cout << prompt << endl;
+        int day = inputValidatedInt("Day (1-31): ", 1, 31);
+        int month = inputValidatedInt("Month (1-12): ", 1, 12);
+        int year = inputValidatedInt("Year (2000-2099): ", 2000, 2099);
 
-        // Преобразование в верхний регистр
-        transform(passport.begin(), passport.end(), passport.begin(), ::toupper);
-
-        // Удаление пробелов для проверки
-        string cleanPassport = passport;
-        cleanPassport.erase(remove(cleanPassport.begin(), cleanPassport.end(), ' '), cleanPassport.end());
-
-        if (cleanPassport.size() == 10 &&
-            all_of(cleanPassport.begin(), cleanPassport.begin() + 4, ::isalpha) &&
-            all_of(cleanPassport.begin() + 4, cleanPassport.end(), ::isdigit)) {
-            // Форматирование с пробелом
-            return cleanPassport.substr(0, 4) + " " + cleanPassport.substr(4);
+        if (isValidDate(day, month, year)) {
+            Date d;
+            d.day = day;
+            d.month = month;
+            d.year = year - 2000;
+            return d;
         }
 
-        cout << "Invalid passport format! Examples: ABCD 123456 or ABCD123456\n";
+        cout << "Invalid date! Please enter a valid date." << endl;
     }
 }
+
+
+string inputPassport(const string& promt) {
+    string passport;
+    cout << promt << "\n";
+    while (true) {
+        getline(cin, passport);
+        regex pattern("^[A-Z]{2}[0-9]{7}$");
+        if (regex_match(passport, pattern)) {
+            return passport;
+        }
+        else {
+            cout << "Invalid passport number. Please enter a valid passport number.\n";
+        }
+    }
+}
+
 
 bool validateDates(const Date& arrival, const Date& departure) {
     return !(departure < arrival);
 }
 
-int inputValidatedInt(const string& prompt, int min, int max) {
-    int value;
-    while (true) {
-        cout << prompt;
-        string line;
-        getline(cin, line);
-        stringstream ss(line);
-
-        if (ss >> value && value >= min && value <= max && ss.eof())
-            return value;
-        cout << "Invalid input! Enter integer between " << min << " and " << max << endl;
-    }
-}
 
 void addGuest(vector<HotelGuest>& guests) {
     HotelGuest g;
 
-    g.passport = inputPassport();
+    g.first_name = inputValidatedName("Enter first name: ", false);
+    g.sur_name = inputValidatedName("Enter sur name: ", false);
+    g.last_name = inputValidatedName("Enter last name: ", true);
+    g.passport = inputPassport("Enter passport (2 uppercase letters followed by 7 digits): ");
 
     while (true) {
         g.arrivalDate = inputDate("Arrival date:");
@@ -174,8 +184,12 @@ void addGuest(vector<HotelGuest>& guests) {
     guests.push_back(g);
 }
 
+
 void printGuest(const HotelGuest& g) {
     cout << "------------------------------------------------------\n"
+        << "| First name: " << g.first_name << "\n"
+        << "| Sur name: " << g.sur_name << "\n"
+        << "| Last name: " << g.last_name << "\n"
         << "| Passport: " << g.passport << "\n"
         << "| Arrival: " << formatDate(g.arrivalDate) << "\n"
         << "| Departure: " << formatDate(g.departureDate) << "\n"
@@ -183,6 +197,7 @@ void printGuest(const HotelGuest& g) {
         << "| Accommodation: " << accommodationTypes[g.accommodation] << "\n"
         << "------------------------------------------------------\n";
 }
+
 
 void searchByArrivalDate(const vector<HotelGuest>& guests) {
     Date searchDate = inputDate("Enter search arrival date:");

@@ -7,10 +7,12 @@
 #include <cctype>
 #include <fstream>
 #include <limits>
+#include <regex>
+#include "validators.h"
 
 using namespace std;
 
-// Перечисление для типов кузова
+
 enum BodyType {
     SEDAN,
     UNIVERSAL,
@@ -22,15 +24,17 @@ enum BodyType {
     BODYTYPE_COUNT
 };
 
+
 const string bodyTypes[] = { "Sedan", "Universal", "Hatchback", "Coupe",
                            "SUV", "Minivan", "Pickup" };
 
-// Структура для даты (без битовых полей для упрощения)
+
 struct Date {
     unsigned int day;
     unsigned int month;
     unsigned int year;
 };
+
 
 struct Car {
     string brand;
@@ -39,23 +43,23 @@ struct Car {
     Date manufactureDate;
     BodyType bodyType;
     Date lastInspection;
-    string owner;
+    string first_name;
+    string sur_name;
+    string last_name;
 };
 
-// Прототипы функций
+
 BodyType inputBodyType();
-Date inputDate(const string& prompt);
 void printCar(const Car& c);
 void addCar(vector<Car>& cars);
 void deleteCar(vector<Car>& cars);
 void searchByOwner(const vector<Car>& cars);
 void saveToFile(const vector<Car>& cars, const string& filename);
 void loadFromFile(vector<Car>& cars, const string& filename);
-int inputValidatedInt(const string& prompt, int min, int max);
-bool validateString(const string& input, const string& pattern);
 string formatDate(const Date& d);
 
 vector<Car> cars;
+
 
 int main() {
     const string filename = "task5_11.txt";
@@ -87,6 +91,22 @@ int main() {
     }
 }
 
+
+string inputValidatedSerialNumber(const string& prompt) {
+    string serial;
+    while (true) {
+        cout << prompt;
+        getline(cin, serial);
+        regex pattern("^[0-9]{4}[A-Z]{2}-[0-9]{1}$");
+
+        if (regex_match(serial, regex(pattern)))
+            return serial;
+
+        cout << "Invalid format! Required format: 1234AB-5\n";
+    }
+}
+
+
 string formatDate(const Date& d) {
     stringstream ss;
     ss << setfill('0')
@@ -96,38 +116,7 @@ string formatDate(const Date& d) {
     return ss.str();
 }
 
-int inputValidatedInt(const string& prompt, int min, int max) {
-    int value;
-    while (true) {
-        cout << prompt;
-        string line;
-        getline(cin, line);
-        stringstream ss(line);
 
-        if (ss >> value && value >= min && value <= max && ss.eof())
-            return value;
-        cout << "Invalid input! Enter integer between " << min << " and " << max << endl;
-    }
-}
-
-bool validateString(const string& input, const string& pattern) {
-    for (char c : input) {
-        if (pattern.find(c) == string::npos)
-            return false;
-    }
-    return !input.empty();
-}
-
-string inputValidatedString(const string& prompt, const string& pattern) {
-    string value;
-    while (true) {
-        cout << prompt;
-        getline(cin, value);
-        if (validateString(value, pattern))
-            return value;
-        cout << "Invalid input! Allowed characters: " << pattern << endl;
-    }
-}
 
 BodyType inputBodyType() {
     cout << "Select body type:\n"
@@ -136,27 +125,76 @@ BodyType inputBodyType() {
     return static_cast<BodyType>(inputValidatedInt("Choice (1-7): ", 1, 7) - 1);
 }
 
-Date inputDate(const string& prompt) {
-    cout << prompt << endl;
-    Date d;
-    d.day = inputValidatedInt("Day (1-31): ", 1, 31);
-    d.month = inputValidatedInt("Month (1-12): ", 1, 12);
-    d.year = inputValidatedInt("Year (1900-2099): ", 1900, 2099);
-    return d;
+
+bool isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
+
+
+bool isValidDate(int day, int month, int year) {
+    if (month < 1 || month > 12) return false;
+
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int maxDay = daysInMonth[month - 1];
+
+    if (month == 2 && isLeapYear(year)) {
+        maxDay = 29;
+    }
+
+    return day >= 1 && day <= maxDay;
+}
+
+
+Date inputDate(const string& prompt) {
+    while (true) {
+        cout << prompt << endl;
+        int day = inputValidatedInt("Day (1-31): ", 1, 31);
+        int month = inputValidatedInt("Month (1-12): ", 1, 12);
+        int year = inputValidatedInt("Year (2000-2099): ", 2000, 2099);
+
+        if (isValidDate(day, month, year)) {
+            Date d;
+            d.day = day;
+            d.month = month;
+            d.year = year - 2000;
+            return d;
+        }
+
+        cout << "Invalid date! Please enter a valid date." << endl;
+    }
+}
+
+
+bool isDateLater(const Date& date1, const Date& date2) {
+    int year1 = date1.year + 2000;
+    int year2 = date2.year + 2000;
+    if (year1 != year2) return year1 > year2;
+    if (date1.month != date2.month) return date1.month > date2.month;
+    return date1.day > date2.day;
+}
+
 
 void addCar(vector<Car>& cars) {
     Car c;
-    c.brand = inputValidatedString("Brand: ", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -");
-    c.color = inputValidatedString("Color: ", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    c.serialNumber = inputValidatedString("Serial number: ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-    c.manufactureDate = inputDate("Manufacture date:");
+    c.brand = inputValidatedString("Brand: ", " -", false);
+    c.color = inputValidatedString("Color: ", " -", false);
+    c.serialNumber = inputValidatedSerialNumber("Serial number (1234AB-5): ");
+    c.manufactureDate = inputDate("Manufacture date (DD/MM/YYYY): ");
     c.bodyType = inputBodyType();
-    c.lastInspection = inputDate("Last inspection date:");
-    c.owner = inputValidatedString("Owner: ", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ");
 
+    do {
+        c.lastInspection = inputDate("Last inspection date (DD/MM/YYYY): ");
+        if (!isDateLater(c.lastInspection, c.manufactureDate)) {
+            cout << "Last inspection must be after manufacture date!\n";
+        }
+    } while (!isDateLater(c.lastInspection, c.manufactureDate));
+
+    c.first_name = inputValidatedName("Enter owner first name: ", false);
+    c.sur_name = inputValidatedName("Enter owner sur name: ", false);
+    c.last_name = inputValidatedName("Enter owner last name: ", true);
     cars.push_back(c);
 }
+
 
 void printCar(const Car& c) {
     cout << "------------------------------------------------------\n"
@@ -166,16 +204,19 @@ void printCar(const Car& c) {
         << "| Body: " << bodyTypes[c.bodyType] << "\n"
         << "| Manufactured: " << formatDate(c.manufactureDate) << "\n"
         << "| Last inspection: " << formatDate(c.lastInspection) << "\n"
-        << "| Owner: " << c.owner << "\n"
+        << "| Owner first name: " << c.first_name << "\n"
+        << "| Owner sur name: " << c.sur_name << "\n"
+        << "| Owner last name: " << c.last_name << "\n"
         << "------------------------------------------------------\n";
 }
 
+
 void searchByOwner(const vector<Car>& cars) {
-    string owner = inputValidatedString("Enter owner name: ", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ");
+    string owner = inputValidatedName("Enter owner name: ", true);
     bool found = false;
 
     for (const auto& c : cars) {
-        if (c.owner == owner) {
+        if (c.sur_name == owner) {
             printCar(c);
             found = true;
         }
@@ -186,8 +227,9 @@ void searchByOwner(const vector<Car>& cars) {
     }
 }
 
+
 void deleteCar(vector<Car>& cars) {
-    string serial = inputValidatedString("Enter serial number to delete: ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+    string serial = inputValidatedSerialNumber("Enter serial number (1234AB-5): ");
 
     auto it = remove_if(cars.begin(), cars.end(),
         [serial](const Car& c) { return c.serialNumber == serial; });
@@ -200,6 +242,7 @@ void deleteCar(vector<Car>& cars) {
         cout << "Car not found\n";
     }
 }
+
 
 void saveToFile(const vector<Car>& cars, const string& filename) {
     ofstream file(filename);
@@ -220,10 +263,13 @@ void saveToFile(const vector<Car>& cars, const string& filename) {
             << c.lastInspection.day << " "
             << c.lastInspection.month << " "
             << c.lastInspection.year << "\n"
-            << c.owner << "\n";
+            << c.first_name << "\n"
+            << c.sur_name << "\n"
+            << c.last_name << "\n";
     }
     cout << "Data saved to " << filename << endl;
 }
+
 
 void loadFromFile(vector<Car>& cars, const string& filename) {
     ifstream file(filename);
@@ -265,7 +311,15 @@ void loadFromFile(vector<Car>& cars, const string& filename) {
         }
 
         file.ignore(INT32_MAX, '\n');
-        getline(file, c.owner);
+        getline(file, c.first_name);
+
+
+        file.ignore(INT32_MAX, '\n');
+        getline(file, c.sur_name);
+
+
+        file.ignore(INT32_MAX, '\n');
+        getline(file, c.last_name);
 
         cars.push_back(c);
     }

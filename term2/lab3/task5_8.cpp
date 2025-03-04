@@ -6,6 +6,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cctype>
+#include "validators.h"
 
 using namespace std;
 
@@ -15,18 +16,10 @@ enum Destination {
     TOKYO, DUBAI, BEIJING, SYDNEY, DESTINATION_COUNT
 };
 
+
 const string destinations[] = {
     "Moscow", "Paris", "London", "New York",
     "Tokyo", "Dubai", "Beijing", "Sydney"
-};
-
-
-union FlightNumber {
-    struct {
-        char airline[3];
-        unsigned int number;
-    } coded;
-    unsigned int numeric;
 };
 
 
@@ -36,27 +29,25 @@ struct Date {
     unsigned int year : 14;
 };
 
+
 struct Flight {
-    FlightNumber number;
     Destination destination;
     string departureTime;
     Date date;
+    double number;
     double price;
     int seats;
 };
 
-// Прототипы функций
+
 void addFlight(vector<Flight>& flights);
 void printFlights(const vector<Flight>& flights);
 void saveToFile(const vector<Flight>& flights, const string& filename);
 void loadFromFile(vector<Flight>& flights, const string& filename);
 void searchByDestination(const vector<Flight>& flights);
-int inputInt(const string& prompt, int min, int max);
-double inputDouble(const string& prompt, double min, double max);
-string inputTime();
-Date inputDate();
 Destination inputDestination();
-bool validateFlightNumber(const string& input);
+Date inputDate(const string& prompt);
+
 
 int main() {
     vector<Flight> flights;
@@ -72,7 +63,7 @@ int main() {
             << "6. Exit\n"
             << "Enter choice: ";
 
-        int choice = inputInt("", 1, 6);
+        int choice = inputValidatedInt("", 1, 6);
 
         switch (choice) {
         case 1: addFlight(flights); break;
@@ -85,83 +76,37 @@ int main() {
     }
 }
 
-// Реализация функций
-
-bool validateFlightNumber(const string& input) {
-    if (input.empty()) return false;
-
-    // Проверка формата AAA-123
-    if (input.size() == 7 &&
-        isalpha(input[0]) && isalpha(input[1]) && isalpha(input[2]) &&
-        input[3] == '-' &&
-        isdigit(input[4]) && isdigit(input[5]) && isdigit(input[6]))
-        return true;
-
-    // Проверка числового формата
-    if (all_of(input.begin(), input.end(), ::isdigit))
-        return true;
-
-    return false;
-}
 
 void addFlight(vector<Flight>& flights) {
     Flight f;
     string numberInput;
 
-    // Ввод номера рейса
-    while (true) {
-        cout << "Enter flight number (AAA-123 or 12345): ";
-        getline(cin, numberInput);
-        transform(numberInput.begin(), numberInput.end(), numberInput.begin(), ::toupper);
-
-        if (validateFlightNumber(numberInput)) break;
-        cout << "Invalid flight number format!\n";
-    }
-
-    // Обработка номера рейса
-    if (numberInput.find('-') != string::npos) {
-        sscanf(numberInput.c_str(), "%3c-%3u",
-            f.number.coded.airline,
-            &f.number.coded.number);
-    }
-    else {
-        f.number.numeric = stoi(numberInput);
-    }
-
+    f.number = inputValidatedDouble("Enter flight number (0.0-1000000.0): ", 0.0, 1000000.0);
     f.destination = inputDestination();
-    f.departureTime = inputTime();
-    f.date = inputDate();
-    f.price = inputDouble("Enter ticket price (50-10000): ", 50, 10000);
-    f.seats = inputInt("Enter available seats (1-500): ", 1, 500);
+    f.departureTime = inputTime("Enter departure time (HH:MM): ");
+    f.date = inputDate("Enter departure date (DD/MM/YYYY): ");
+    f.price = inputValidatedDouble("Enter ticket price (50.0-10000.0): ", 50, 10000);
+    f.seats = inputValidatedInt("Enter available seats (1-500): ", 1, 500);
 
     flights.push_back(f);
 }
+
 
 void printFlights(const vector<Flight>& flights) {
     cout << "\nList of flights:\n";
     for (const auto& f : flights) {
         cout << "------------------------------------------------------\n"
-            << "Flight: ";
-
-        if (isalpha(f.number.coded.airline[0])) {
-            cout << f.number.coded.airline[0]
-                << f.number.coded.airline[1]
-                << f.number.coded.airline[2]
-                << "-" << f.number.coded.number;
-        }
-        else {
-            cout << f.number.numeric;
-        }
-
-        cout << "\nDestination: " << destinations[f.destination]
+            << "Flight: " << fixed << setprecision(6) << f.number
+            << "\nDestination: " << destinations[f.destination]
             << "\nDate: " << (int)f.date.day << "/"
             << (int)f.date.month << "/" << (f.date.year + 2000)
             << "\nTime: " << f.departureTime
-            << "\nPrice: $" << fixed << setprecision(2) << f.price
+            << "\nPrice: $" << fixed << setprecision(6) << f.price
             << "\nSeats: " << f.seats << "\n";
     }
     cout << "------------------------------------------------------\n";
 }
+
 
 void saveToFile(const vector<Flight>& flights, const string& filename) {
     ofstream file(filename, ios::binary);
@@ -186,6 +131,7 @@ void saveToFile(const vector<Flight>& flights, const string& filename) {
     cout << "Data saved to " << filename << endl;
 }
 
+
 void loadFromFile(vector<Flight>& flights, const string& filename) {
     ifstream file(filename, ios::binary);
     if (!file) {
@@ -199,7 +145,7 @@ void loadFromFile(vector<Flight>& flights, const string& filename) {
     flights.resize(count);
 
     for (size_t i = 0; i < count; ++i) {
-        file.read(reinterpret_cast<char*>(&flights[i].number), sizeof(FlightNumber));
+        file.read(reinterpret_cast<char*>(&flights[i].number), sizeof(double));
         file.read(reinterpret_cast<char*>(&flights[i].destination), sizeof(Destination));
         size_t timeSize;
         file.read(reinterpret_cast<char*>(&timeSize), sizeof(timeSize));
@@ -212,68 +158,53 @@ void loadFromFile(vector<Flight>& flights, const string& filename) {
     cout << "Data loaded from " << filename << endl;
 }
 
+
 Destination inputDestination() {
     cout << "Select destination:\n";
     for (int i = 0; i < DESTINATION_COUNT; ++i)
         cout << i + 1 << ". " << destinations[i] << "\n";
-    return static_cast<Destination>(inputInt("Enter choice (1-8): ", 1, 8) - 1);
+    return static_cast<Destination>(inputValidatedInt("Enter choice (1-8): ", 1, 8) - 1);
 }
 
-Date inputDate() {
-    Date d;
-    d.day = inputInt("Enter day (1-31): ", 1, 31);
-    d.month = inputInt("Enter month (1-12): ", 1, 12);
-    d.year = inputInt("Enter year (2000-2099): ", 2000, 2099) - 2000;
-    return d;
+
+bool isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
-string inputTime() {
-    string time;
+
+bool isValidDate(int day, int month, int year) {
+    if (month < 1 || month > 12) return false;
+
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int maxDay = daysInMonth[month - 1];
+
+    if (month == 2 && isLeapYear(year)) {
+        maxDay = 29;
+    }
+
+    return day >= 1 && day <= maxDay;
+}
+
+
+Date inputDate(const string& prompt) {
     while (true) {
-        cout << "Enter departure time (HH:MM): ";
-        getline(cin, time);
+        cout << prompt << endl;
+        int day = inputValidatedInt("Day (1-31): ", 1, 31);
+        int month = inputValidatedInt("Month (1-12): ", 1, 12);
+        int year = inputValidatedInt("Year (2000-2099): ", 2000, 2099);
 
-        if (time.size() == 5 &&
-            isdigit(time[0]) && isdigit(time[1]) &&
-            time[2] == ':' &&
-            isdigit(time[3]) && isdigit(time[4])) {
-            int hours = stoi(time.substr(0, 2));
-            int minutes = stoi(time.substr(3, 2));
-            if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60)
-                return time;
+        if (isValidDate(day, month, year)) {
+            Date d;
+            d.day = day;
+            d.month = month;
+            d.year = year - 2000;
+            return d;
         }
-        cout << "Invalid time format! Use HH:MM\n";
+
+        cout << "Invalid date! Please enter a valid date." << endl;
     }
 }
 
-int inputInt(const string& prompt, int min, int max) {
-    int value;
-    while (true) {
-        cout << prompt;
-        string line;
-        getline(cin, line);
-        stringstream ss(line);
-
-        if (ss >> value && value >= min && value <= max && ss.eof())
-            return value;
-        cout << "Invalid input! Enter integer between " << min << " and " << max << endl;
-    }
-}
-
-double inputDouble(const string& prompt, double min, double max) {
-    double value;
-    while (true) {
-        cout << prompt;
-        string line;
-        getline(cin, line);
-        replace(line.begin(), line.end(), ',', '.');
-        stringstream ss(line);
-
-        if (ss >> value && value >= min && value <= max && ss.eof())
-            return value;
-        cout << "Invalid input! Enter value between " << min << " and " << max << endl;
-    }
-}
 
 void searchByDestination(const vector<Flight>& flights) {
     Destination target = inputDestination();
@@ -282,16 +213,7 @@ void searchByDestination(const vector<Flight>& flights) {
     cout << "\nFlights to " << destinations[target] << ":\n";
     for (const auto& f : flights) {
         if (f.destination == target) {
-            cout << "Flight: ";
-            if (isalpha(f.number.coded.airline[0])) {
-                cout << f.number.coded.airline[0]
-                    << f.number.coded.airline[1]
-                    << f.number.coded.airline[2]
-                    << "-" << f.number.coded.number;
-            }
-            else {
-                cout << f.number.numeric;
-            }
+            cout << "Flight: " << f.number;
             cout << " | Date: " << (int)f.date.day << "/"
                 << (int)f.date.month << "/" << (f.date.year + 2000)
                 << " | Time: " << f.departureTime

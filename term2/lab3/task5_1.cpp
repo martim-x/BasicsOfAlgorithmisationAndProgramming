@@ -1,3 +1,4 @@
+// УДОСТОВЕРИТЬСЯ НА НУЖНОСТЬ ИМПРОТОВ ЗАВИСИМОСТЕЙ
 #include <iostream>
 #include <vector>
 #include <string>
@@ -5,64 +6,10 @@
 #include <sstream>
 #include <limits>
 #include <cstdio>     
-#include <cstdlib>    
+#include <cstdlib>
+#include "validators.h"
 
 using namespace std;
-
-
-int inputValidatedInt(const string& prompt, int min = 0, int max = INT32_MAX) {
-    int value;
-    while (true) {
-        cout << prompt;
-        string line;
-        getline(cin, line);
-        stringstream ss(line);
-        if (ss >> value && ss.eof() && value >= min && value <= max) {
-            return value;
-        }
-        cout << "Invalid input! Please try again." << endl;
-    }
-}
-
-
-bool isValidString(const string& str, const string& allowedChars, bool canBeEmpty) {
-    if (canBeEmpty && str.empty())
-        return true;
-    if (str.empty())
-        return false;
-    char c_prev = str[0];
-    for (size_t i = 0; i < str.length(); i++) {
-        char c = str[i];
-        // Если первый или последний символ является допустимым спецсимволом, то считаем ввод недопустимым
-        if ((i == 0 || i == str.length() - 1) && allowedChars.find(c) != string::npos)
-            return false;
-        // Если символ не буква, то он должен присутствовать в списке дополнительных допустимых символов
-        if (!isalpha(c)) {
-            if (allowedChars.find(c) == string::npos)
-                return false;
-            // Если спецсимволы идут подряд, то также считаем ввод ошибочным
-            if (allowedChars.find(c) != string::npos && c_prev == c)
-                return false;
-        }
-        c_prev = c;
-    }
-    return true;
-}
-
-
-string inputValidatedString(const string& prompt, const string& allowedChars, bool canBeEmpty, const string& strReplaced = "EMPTY") {
-    string value;
-    while (true) {
-        cout << prompt;
-        getline(cin, value);
-        if (isValidString(value, allowedChars, canBeEmpty)) {
-            if (value.empty())
-                return strReplaced;
-            return value;
-        }
-        cout << "Invalid input!" << endl;
-    }
-}
 
 
 union ExamDate {
@@ -82,17 +29,52 @@ struct Teacher {
 };
 
 
+bool isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+
+bool isValidDate(const ExamDate& date) {
+    int day = date.parts.day;
+    int month = date.parts.month;
+    int year = date.parts.year;
+
+    if (month < 1 || month > 12) return false;
+
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int maxDay = daysInMonth[month - 1];
+
+    if (month == 2 && isLeapYear(year)) {
+        maxDay = 29;
+    }
+
+    return day >= 1 && day <= maxDay;
+}
+
+
+ExamDate inputExamDate(const string& prompt) {
+    ExamDate date;
+    while (true) {
+        cout << prompt << endl;
+        date.parts.day = inputValidatedInt("Day (1-31): ", 1, 31);
+        date.parts.month = inputValidatedInt("Month (1-12): ", 1, 12);
+        date.parts.year = inputValidatedInt("Year (2000-2099): ", 2000, 2099);
+
+        if (isValidDate(date)) {
+            sprintf(date.dateStr, "%02d/%02d/%04d", date.parts.day, date.parts.month, date.parts.year);
+            return date;
+        }
+        cout << "Invalid date! Please enter a valid date." << endl;
+    }
+}
+
+
+
 Teacher inputTeacher() {
     Teacher t;
-    t.surname = inputValidatedString("Enter teacher's surname: ", " -", false);
-    t.examName = inputValidatedString("Enter exam name: ", " -", false);
-
-    int day = inputValidatedInt("Enter exam day (1-31): ", 1, 31);
-    int month = inputValidatedInt("Enter exam month (1-12): ", 1, 12);
-    int year = inputValidatedInt("Enter exam year (1900-2100): ", 1900, 2100);
-
-
-    sprintf(t.examDate.dateStr, "%02d/%02d/%04d", day, month, year);
+    t.surname = inputValidatedName("Enter teacher's surname: ", false);
+    t.examName = inputValidatedString("Enter exam name: ", " -,.0123456789",false);
+    t.examDate = inputExamDate("Enter exam date: ");
     return t;
 }
 

@@ -5,9 +5,9 @@
 using namespace std;
 
 int main() {
-    string valConName = inputValidatedName("Enter des: ");
-
-    cout << "DEST IS : " << valConName << endl;
-
+    while (true) {
+        string valConName = inputValidatedName("Enter Name: ");
+        cout << "DEST IS : " << valConName << endl;
+    }
     return 0;
 }
