@@ -61,7 +61,7 @@ ExamDate inputExamDate(const string& prompt) {
         date.parts.year = inputValidatedInt("Year (2000-2099): ", 2000, 2099);
 
         if (isValidDate(date)) {
-            sprintf(date.dateStr, "%02d/%02d/%04d", date.parts.day, date.parts.month, date.parts.year);
+            snprintf(date.dateStr, sizeof(date.dateStr), "%02d/%02d/%04d", date.parts.day, date.parts.month, date.parts.year);
             return date;
         }
         cout << "Invalid date! Please enter a valid date." << endl;
@@ -73,7 +73,7 @@ ExamDate inputExamDate(const string& prompt) {
 Teacher inputTeacher() {
     Teacher t;
     t.surname = inputValidatedName("Enter teacher's surname: ", false);
-    t.examName = inputValidatedString("Enter exam name: ", " -,.0123456789",false);
+    t.examName = inputValidatedString("Enter exam name: ", " -,.0123456789", false);
     t.examDate = inputExamDate("Enter exam date: ");
     return t;
 }

@@ -1,4 +1,3 @@
-// УДОСТОВЕРИТЬСЯ НА НУЖНОСТЬ ИМПРОТОВ ЗАВИСИМОСТЕЙ
 #include <iostream>
 #include <string>
 #include <vector>
@@ -34,7 +33,7 @@ struct Date {
 
 
 struct Flight {
-    double number;
+    int number;
     Destination destination;
     string departureTime;
     Date date;
@@ -132,7 +131,7 @@ Destination inputDestination() {
 
 void addFlight(vector<Flight>& flights) {
     Flight f;
-    f.number = inputValidatedDouble("Enter flight number (0.1-9999.99999): ", 0.1, 9999.99999);
+    f.number = inputValidatedInt("Enter flight number (0-9999): ", 0, 9999);
     f.destination = inputDestination();
     f.departureTime = inputTime("Enter deportation time (HH:MM): ");
 
@@ -147,7 +146,7 @@ void addFlight(vector<Flight>& flights) {
 void printFlight(const Flight& f) {
     const string destinations[] = { "Moscow", "Paris", "London", "New York",
                                    "Tokyo", "Dubai", "Beijing", "Sydney" };
-    cout << "----------------------\n" << "|Flight #" << fixed << setprecision(6) << f.number << " to " << destinations[f.destination]
+    cout << "----------------------\n" << "|Flight #" << f.number << " to " << destinations[f.destination]
         << "\n|Departure: " << f.date.day << "/" << f.date.month << "/" << f.date.year
         << " at " << f.departureTime << "\n|Price: $" << fixed << setprecision(6)
         << f.ticketPrice << "\n|Seat: " << f.seatsAvailable << "\n----------------------\n\n";

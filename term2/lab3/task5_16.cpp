@@ -74,7 +74,7 @@ StudentRecord inputStudent() {
     s.admitDate.parts.day = day;
     s.admitDate.parts.month = month;
     s.admitDate.parts.year = year;
-    sprintf(s.admitDate.dateStr, "%02d/%02d/%04d", day, month, year);
+    snprintf(s.admitDate.dateStr, sizeof(s.admitDate.dateStr), "%02d/%02d/%04d", day, month, year);
 
     s.specialization = inputValidatedString("Enter specialization: ", " -0123456789", false);
     s.group = inputValidatedInt("Enter group: ", 1, 10);

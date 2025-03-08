@@ -10,16 +10,18 @@
 
 using namespace std;
 
-
-enum Destination {
-    MOSCOW, PARIS, LONDON, NEW_YORK,
-    TOKYO, DUBAI, BEIJING, SYDNEY, DESTINATION_COUNT
-};
-
-
+const int DESTINATION_COUNT = 8;
 const string destinations[] = {
     "Moscow", "Paris", "London", "New York",
     "Tokyo", "Dubai", "Beijing", "Sydney"
+};
+
+
+union Destination {
+    int code;
+    struct {
+        unsigned char city_code;
+    } parts;
 };
 
 
@@ -34,7 +36,7 @@ struct Flight {
     Destination destination;
     string departureTime;
     Date date;
-    double number;
+    int number;
     double price;
     int seats;
 };
@@ -45,9 +47,8 @@ void printFlights(const vector<Flight>& flights);
 void saveToFile(const vector<Flight>& flights, const string& filename);
 void loadFromFile(vector<Flight>& flights, const string& filename);
 void searchByDestination(const vector<Flight>& flights);
-Destination inputDestination();
+int inputDestination();
 Date inputDate(const string& prompt);
-
 
 int main() {
     vector<Flight> flights;
@@ -76,13 +77,10 @@ int main() {
     }
 }
 
-
 void addFlight(vector<Flight>& flights) {
     Flight f;
-    string numberInput;
-
-    f.number = inputValidatedDouble("Enter flight number (0.0-1000000.0): ", 0.0, 1000000.0);
-    f.destination = inputDestination();
+    f.number = inputValidatedInt("Enter flight number (0-1000000): ", 0, 1000000);
+    f.destination.code = inputDestination();
     f.departureTime = inputTime("Enter departure time (HH:MM): ");
     f.date = inputDate("Enter departure date (DD/MM/YYYY): ");
     f.price = inputValidatedDouble("Enter ticket price (50.0-10000.0): ", 50, 10000);
@@ -91,13 +89,12 @@ void addFlight(vector<Flight>& flights) {
     flights.push_back(f);
 }
 
-
 void printFlights(const vector<Flight>& flights) {
     cout << "\nList of flights:\n";
     for (const auto& f : flights) {
         cout << "------------------------------------------------------\n"
-            << "Flight: " << fixed << setprecision(6) << f.number
-            << "\nDestination: " << destinations[f.destination]
+            << "Flight: " << f.number
+            << "\nDestination: " << destinations[f.destination.code]
             << "\nDate: " << (int)f.date.day << "/"
             << (int)f.date.month << "/" << (f.date.year + 2000)
             << "\nTime: " << f.departureTime
@@ -120,7 +117,7 @@ void saveToFile(const vector<Flight>& flights, const string& filename) {
 
     for (const auto& f : flights) {
         file.write(reinterpret_cast<const char*>(&f.number), sizeof(f.number));
-        file.write(reinterpret_cast<const char*>(&f.destination), sizeof(f.destination));
+        file.write(reinterpret_cast<const char*>(&f.destination.code), sizeof(f.destination.code));
         size_t timeSize = f.departureTime.size();
         file.write(reinterpret_cast<const char*>(&timeSize), sizeof(timeSize));
         file.write(f.departureTime.c_str(), timeSize);
@@ -145,8 +142,8 @@ void loadFromFile(vector<Flight>& flights, const string& filename) {
     flights.resize(count);
 
     for (size_t i = 0; i < count; ++i) {
-        file.read(reinterpret_cast<char*>(&flights[i].number), sizeof(double));
-        file.read(reinterpret_cast<char*>(&flights[i].destination), sizeof(Destination));
+        file.read(reinterpret_cast<char*>(&flights[i].number), sizeof(int));
+        file.read(reinterpret_cast<char*>(&flights[i].destination.code), sizeof(int));
         size_t timeSize;
         file.read(reinterpret_cast<char*>(&timeSize), sizeof(timeSize));
         flights[i].departureTime.resize(timeSize);
@@ -159,11 +156,11 @@ void loadFromFile(vector<Flight>& flights, const string& filename) {
 }
 
 
-Destination inputDestination() {
+int inputDestination() {
     cout << "Select destination:\n";
     for (int i = 0; i < DESTINATION_COUNT; ++i)
         cout << i + 1 << ". " << destinations[i] << "\n";
-    return static_cast<Destination>(inputValidatedInt("Enter choice (1-8): ", 1, 8) - 1);
+    return inputValidatedInt("Enter choice (1-8): ", 1, 8) - 1;
 }
 
 
@@ -207,12 +204,12 @@ Date inputDate(const string& prompt) {
 
 
 void searchByDestination(const vector<Flight>& flights) {
-    Destination target = inputDestination();
+    int target = inputDestination();
     bool found = false;
 
     cout << "\nFlights to " << destinations[target] << ":\n";
     for (const auto& f : flights) {
-        if (f.destination == target) {
+        if (f.destination.code == target) {
             cout << "Flight: " << f.number;
             cout << " | Date: " << (int)f.date.day << "/"
                 << (int)f.date.month << "/" << (f.date.year + 2000)
