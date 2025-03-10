@@ -16,21 +16,16 @@ const string destinations[] = {
     "Tokyo", "Dubai", "Beijing", "Sydney"
 };
 
-
+// Union для хранения только кода
 union Destination {
     int code;
-    struct {
-        unsigned char city_code;
-    } parts;
 };
-
 
 struct Date {
     unsigned int day : 5;
     unsigned int month : 4;
     unsigned int year : 14;
 };
-
 
 struct Flight {
     Destination destination;
@@ -40,7 +35,6 @@ struct Flight {
     double price;
     int seats;
 };
-
 
 void addFlight(vector<Flight>& flights);
 void printFlights(const vector<Flight>& flights);
@@ -94,7 +88,7 @@ void printFlights(const vector<Flight>& flights) {
     for (const auto& f : flights) {
         cout << "------------------------------------------------------\n"
             << "Flight: " << f.number
-            << "\nDestination: " << destinations[f.destination.code]
+            << "\nDestination: " << destinations[f.destination.code]  // Используем массив строк
             << "\nDate: " << (int)f.date.day << "/"
             << (int)f.date.month << "/" << (f.date.year + 2000)
             << "\nTime: " << f.departureTime
@@ -103,7 +97,6 @@ void printFlights(const vector<Flight>& flights) {
     }
     cout << "------------------------------------------------------\n";
 }
-
 
 void saveToFile(const vector<Flight>& flights, const string& filename) {
     ofstream file(filename, ios::binary);
@@ -127,7 +120,6 @@ void saveToFile(const vector<Flight>& flights, const string& filename) {
     }
     cout << "Data saved to " << filename << endl;
 }
-
 
 void loadFromFile(vector<Flight>& flights, const string& filename) {
     ifstream file(filename, ios::binary);
@@ -155,7 +147,6 @@ void loadFromFile(vector<Flight>& flights, const string& filename) {
     cout << "Data loaded from " << filename << endl;
 }
 
-
 int inputDestination() {
     cout << "Select destination:\n";
     for (int i = 0; i < DESTINATION_COUNT; ++i)
@@ -163,11 +154,9 @@ int inputDestination() {
     return inputValidatedInt("Enter choice (1-8): ", 1, 8) - 1;
 }
 
-
 bool isLeapYear(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
-
 
 bool isValidDate(int day, int month, int year) {
     if (month < 1 || month > 12) return false;
@@ -181,7 +170,6 @@ bool isValidDate(int day, int month, int year) {
 
     return day >= 1 && day <= maxDay;
 }
-
 
 Date inputDate(const string& prompt) {
     while (true) {
@@ -202,7 +190,6 @@ Date inputDate(const string& prompt) {
     }
 }
 
-
 void searchByDestination(const vector<Flight>& flights) {
     int target = inputDestination();
     bool found = false;
@@ -210,8 +197,8 @@ void searchByDestination(const vector<Flight>& flights) {
     cout << "\nFlights to " << destinations[target] << ":\n";
     for (const auto& f : flights) {
         if (f.destination.code == target) {
-            cout << "Flight: " << f.number;
-            cout << " | Date: " << (int)f.date.day << "/"
+            cout << "Flight: " << f.number
+                << " | Date: " << (int)f.date.day << "/"
                 << (int)f.date.month << "/" << (f.date.year + 2000)
                 << " | Time: " << f.departureTime
                 << " | Price: $" << fixed << setprecision(2) << f.price

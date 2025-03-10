@@ -22,6 +22,9 @@ int inputValidatedInt(const string& prompt, int min, int max) {
     }
 }
 
+bool isValidInt(const string& promt, int value, int min, int max) {
+    return value >= min && value <= max;
+}
 
 double inputValidatedDouble(const string& prompt, double min, double max) {
     double value;
