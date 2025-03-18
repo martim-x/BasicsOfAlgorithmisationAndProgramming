@@ -30,7 +30,6 @@ void removeFirstNegative(Queue& q) {
             cout << "First negative element removed: " << *element << endl;
             return;
         }
-        // Move the head of the queue to the next element
         q.Head = (q.Head + 1) % q.Size;
     }
     cout << "No negative elements found." << endl;
@@ -53,7 +52,7 @@ int main() {
 
         int choice;
         cin >> choice;
-        cin.ignore();  // To ignore any remaining newline characters
+        cin.ignore();
 
         switch (choice) {
         case 1: {

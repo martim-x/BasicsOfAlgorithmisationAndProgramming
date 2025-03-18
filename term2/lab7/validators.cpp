@@ -189,3 +189,22 @@ string inputValidatedCountryOrTownName(const string& prompt) {
         cout << "Invalid input!\n";
     }
 }
+
+bool isValidPhoneNumber(const std::string& phoneNumber) {
+    regex phonePattern(R"(^\+375\s?\(?\d{2}\)?\s?\d{3}[- ]?\d{2}[- ]?\d{2}$)");
+
+    return regex_match(phoneNumber, phonePattern);
+}
+
+string inputValidatedPhoneNumber(const string& prompt) {
+    string name;
+    while (true) {
+        cout << prompt;
+        getline(cin, name);
+
+        if (isValidPhoneNumber(name)) return name;
+
+        cout << "Enter phone number (formats: +375 XX XXX XX XX, +375 XX XXX-XX-XX, +375 XX XXX XX-XX): ";
+    }
+}
+
