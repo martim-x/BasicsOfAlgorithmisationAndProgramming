@@ -39,10 +39,10 @@ Student inputStudent(const vector<string>& subjects) {
     Student s;
     s.lastName = inputValidatedName("Enter last name: ", true);
     s.firstName = inputValidatedName("Enter first name: ", false);
-    s.patronymic = inputValidatedName("Enter patronymic: ", false);
+    s.patronymic = inputValidatedCountryOrTownName("Enter patronymic: ", true);
     s.birthYear = inputValidatedInt("Enter birth year (1999 - 2010): ", 1999, 2010);
     s.course = inputValidatedInt("Enter course (1 - 6): ", 1, 6);
-    s.group = inputValidatedString("Enter group: ", "0123456789-", false, "");
+    s.group = inputValidatedInt("Enter group (1 - 10): ", 1, 10);
 
     cout << "Enter 5 grades:\n";
     for (int i = 0; i < 5; ++i) {
@@ -67,8 +67,9 @@ map<string, GroupStats> calculateStatistics(vector<Student>& students, const vec
         double total = accumulate(student.grades.begin(), student.grades.end(), 0.0);
         double avg = total / student.grades.size();
 
-        if (!groupStat.bestStudent || avg > accumulate(groupStat.bestStudent->grades.begin(),
-            groupStat.bestStudent->grades.end(), 0.0) / 5.0) {
+        if (!groupStat.bestStudent || (avg > accumulate(
+            groupStat.bestStudent->grades.begin(),
+            groupStat.bestStudent->grades.end(), 0.0) / groupStat.bestStudent->grades.size())) {
             groupStat.bestStudent = &student;
         }
 
@@ -81,9 +82,12 @@ map<string, GroupStats> calculateStatistics(vector<Student>& students, const vec
         GroupStats& stat = entry.second;
         for (auto& subjectEntry : stat.subjectAverages) {
             vector<double>& grades = subjectEntry.second;
-            double sum = accumulate(grades.begin(), grades.end(), 0.0);
-            grades.clear();
-            grades.push_back(sum / grades.size());
+            if (!grades.empty()) {
+                double sum = accumulate(grades.begin(), grades.end(), 0.0);
+                size_t count = grades.size();
+                grades.clear();
+                grades.push_back(sum / count);
+            }
         }
     }
 
@@ -156,9 +160,9 @@ int main() {
             Student* youngest = ageExtremes.first;
             Student* oldest = ageExtremes.second;
             if (oldest) {
-                cout << "\nOldest student: " << oldest->patronymic << oldest->firstName << " ("
+                cout << "\nOldest student: " << oldest->patronymic << " " << oldest->firstName << " ("
                     << oldest->birthYear << ")";
-                cout << "\nYoungest student: " << youngest->patronymic << youngest->firstName << " ("
+                cout << "\nYoungest student: " << youngest->patronymic << " " << youngest->firstName << " ("
                     << youngest->birthYear << ")\n";
             }
             break;

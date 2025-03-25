@@ -143,17 +143,16 @@ string validateTime(const string& input) {
     if (time.size() == 3 && time[0] == ':') time = "00" + time;
     if (time.size() == 1) time = "0" + time + ":00";
 
-    if (time.size() != 5 || time[2] != ':' ||
-        !isdigit(time[0]) || !isdigit(time[1]) ||
+    if (time.size() != 5  time[2] != ':'
+        !isdigit(time[0])  !isdigit(time[1])
         !isdigit(time[3]) || !isdigit(time[4])) return "";
 
     int hours = stoi(time.substr(0, 2));
     int minutes = stoi(time.substr(3, 2));
-    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return "";
+    if (hours < 0  hours > 23  minutes < 0 || minutes > 59) return "";
 
     return time;
 }
-
 
 string inputTime(const string& prompt) {
     string time;
@@ -178,12 +177,13 @@ bool isValidCountryOrTownName(const string& name) {
 }
 
 
-string inputValidatedCountryOrTownName(const string& prompt) {
+string inputValidatedCountryOrTownName(const string& prompt, bool canBeEmpty) {
     string name;
     while (true) {
         cout << prompt;
         getline(cin, name);
-
+        if (name == "" && canBeEmpty)
+            return "EMPTY";
         if (isValidCountryOrTownName(name)) return name;
 
         cout << "Invalid input!\n";
@@ -207,4 +207,3 @@ string inputValidatedPhoneNumber(const string& prompt) {
         cout << "Enter phone number (formats: +375 XX XXX XX XX, +375 XX XXX-XX-XX, +375 XX XXX XX-XX): ";
     }
 }
-
