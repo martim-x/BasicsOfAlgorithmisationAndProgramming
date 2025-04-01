@@ -16,7 +16,6 @@ const string destinations[] = {
     "Tokyo", "Dubai", "Beijing", "Sydney"
 };
 
-// Union для хранения только кода
 union Destination {
     int code;
 };
@@ -46,7 +45,7 @@ Date inputDate(const string& prompt);
 
 int main() {
     vector<Flight> flights;
-    const string filename = "task5_8.dat";
+    const string filename = "task5_8.bin";
 
     while (true) {
         cout << "\nAirline Management System\n"

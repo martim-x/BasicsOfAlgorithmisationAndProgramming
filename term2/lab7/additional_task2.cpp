@@ -15,11 +15,11 @@ struct Student {
     int birthYear;
     int course;
     string group;
-    vector<int> grades; // 5 grades
+    vector<int> grades;
 };
 
 struct GroupStats {
-    map<string, vector<double>> subjectAverages; // key: subject name
+    map<string, vector<double>> subjectAverages;
     Student* bestStudent = nullptr;
 };
 

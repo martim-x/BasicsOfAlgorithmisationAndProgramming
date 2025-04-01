@@ -87,3 +87,14 @@ bool List::DeleteList() {
     Head = nullptr;
     return true;
 }
+
+int List::countX(int x) {
+    int count = 0;
+    Element* curr = Head;
+    while (curr != nullptr) {
+        if (curr->Data->age == x) // Проверяем возраст
+            count++;
+        curr = curr->Next;
+    }
+    return count;
+}

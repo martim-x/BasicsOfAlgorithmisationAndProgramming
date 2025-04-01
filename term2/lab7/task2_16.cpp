@@ -54,7 +54,6 @@ void showListSelection() {
 }
 
 int menu() {
-    system("cls");
     showListSelection();
     cout << "\n1. Select list 1\n"
         << "2. Select list 2\n"
@@ -177,7 +176,6 @@ int main() {
                     cout << t->name << " | " << t->city << endl;
                     t = t->next;
                 }
-                system("pause");
                 break;
             }
             case 7: {
@@ -193,7 +191,6 @@ int main() {
             case 9: {
                 string name = inputValidatedString("Enter name to count: ", "", false, "");
                 cout << "Count: " << countX(lists[current], name) << endl;
-                system("pause");
                 break;
             }
             case 0:
@@ -202,7 +199,6 @@ int main() {
         }
         catch (const exception& e) {
             cerr << "Error: " << e.what() << endl;
-            system("pause");
         }
     }
 }

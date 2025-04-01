@@ -35,4 +35,5 @@ public:
     void PrintList(std::function<void(Person*)> printFunc); // Print the list
     int CountList();                // Count elements
     bool DeleteList();              // Clear the list
+    int countX(int x); // Добавляем в class List
 };

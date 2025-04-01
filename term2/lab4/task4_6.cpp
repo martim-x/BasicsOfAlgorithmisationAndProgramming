@@ -178,12 +178,12 @@ void menu() {
             break;
 
         case 5:
-            filename = "task4_8.bin";
+            filename = "task4_6.bin";
             saveToFile(head, filename);
             break;
 
         case 6:
-            filename = "task4_8.bin";
+            filename = "task4_6.bin";
             clear(head);
             loadFromFile(head, filename);
             break;

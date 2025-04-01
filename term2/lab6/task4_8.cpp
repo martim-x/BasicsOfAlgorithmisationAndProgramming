@@ -1,8 +1,21 @@
 #include <iostream>
 #include "queue.h"
 #include <sstream>
+#include <sstream>
+#include <cctype>
 
 using namespace std;
+
+bool isValidNumber(const string& str) {
+    if (str.empty()) return false;
+
+    for (char c : str) {
+        if (!isdigit(c) && c != '-') {
+            return false;
+        }
+    }
+    return true;
+}
 
 int inputValidatedInt(const string& prompt, int min, int max) {
     int value;
@@ -10,33 +23,57 @@ int inputValidatedInt(const string& prompt, int min, int max) {
         cout << prompt;
         string line;
         getline(cin, line);
-        stringstream ss(line);
 
-        if (ss >> value && ss.eof() && value >= min && value <= max) {
-            return value;
+        if (isValidNumber(line)) {
+            stringstream ss(line);
+            if (ss >> value && ss.eof() && value >= min && value <= max) {
+                return value;
+            }
         }
-        cout << "Invalid input! Please try again." << endl;
+        cout << "Invalid input! Please enter a number between " << min << " and " << max << "." << endl;
     }
 }
 
+
 void removeFirstNegative(Queue& q) {
+    if (q.isEmpty()) {
+        cout << "Queue is empty!" << endl;
+        return;
+    }
+
+    Queue temp = createQueue(q.Size);
+    bool found = false;
+
     int size = q.Tail - q.Head;
     if (size < 0) size += q.Size;
 
     for (int i = 0; i < size; ++i) {
-        int* element = static_cast<int*>(q.Data[q.Head]);
-        if (*element < 0) {
-            delQueue(q);
+        int* element = static_cast<int*>(peekQueue(q));
+
+        if (!found && *element < 0) {
             cout << "First negative element removed: " << *element << endl;
-            return;
+            delQueue(q);
+            found = true;
         }
-        q.Head = (q.Head + 1) % q.Size;
+        else {
+            enQueue(temp, delQueue(q));
+        }
     }
-    cout << "No negative elements found." << endl;
+
+    q = copyQueue(temp);
+    releaseQueue(temp);
 }
 
+
+void showQueue(Queue q) {
+    for (int i = q.Head; i != q.Tail; i = (i + 1) % q.Size) {
+        cout << *static_cast<int*>(q.Data[i]) << " ";
+    }
+}
+
+
 int main() {
-    int maxSize = inputValidatedInt("Enter max size of queue: ", 1, 100);
+    int maxSize = inputValidatedInt("Enter max size of queue (1 - 100): ", 1, 100);
     Queue q = createQueue(maxSize);
 
     while (true) {
@@ -84,9 +121,7 @@ int main() {
 
         case 4:
             cout << "Queue: ";
-            for (int i = q.Head; i != q.Tail; i = (i + 1) % q.Size) {
-                cout << *static_cast<int*>(q.Data[i]) << " ";
-            }
+            showQueue(q);
             cout << endl;
             break;
 

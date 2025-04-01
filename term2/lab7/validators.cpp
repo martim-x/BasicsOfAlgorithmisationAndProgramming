@@ -143,13 +143,13 @@ string validateTime(const string& input) {
     if (time.size() == 3 && time[0] == ':') time = "00" + time;
     if (time.size() == 1) time = "0" + time + ":00";
 
-    if (time.size() != 5  time[2] != ':'
-        !isdigit(time[0])  !isdigit(time[1])
+    if (time.size() != 5 || time[2] != ':' ||
+        !isdigit(time[0]) || !isdigit(time[1]) ||
         !isdigit(time[3]) || !isdigit(time[4])) return "";
 
     int hours = stoi(time.substr(0, 2));
     int minutes = stoi(time.substr(3, 2));
-    if (hours < 0  hours > 23  minutes < 0 || minutes > 59) return "";
+    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return "";
 
     return time;
 }
@@ -167,10 +167,10 @@ string inputTime(const string& prompt) {
 
 
 bool isValidCountryOrTownName(const string& name) {
-    if (name.empty()) return false;
-    regex namePattern(R"(^([A-Z][a-z]*)( [A-Z][a-z]*)*$)");
+    regex pattern(R"(^[A-Z][a-z]+(-[A-Z][a-z]+){0,2}$)");
+    return regex_match(name, pattern);
 
-    if (regex_match(name, namePattern))
+    if (regex_match(name, pattern))
         return true;
 
     return false;
