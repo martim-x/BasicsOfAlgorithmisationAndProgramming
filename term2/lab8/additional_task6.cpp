@@ -23,13 +23,14 @@ int inputValidatedInt(const string& prompt, int min, int max) {
 
 void generateNumbers(int A, int current, vector<int>& digits, ofstream& out) {
     if (current == A) {
+        if (digits[0] == 0) return;
         for (int d : digits)
             out << d;
         out << "\n";
         return;
     }
 
-    for (int d = 0; d <= A; d++) {
+    for (int d = (current == 0 ? 1 : 0); d <= A; d++) {
         digits[current] = d;
         generateNumbers(A, current + 1, digits, out);
     }
