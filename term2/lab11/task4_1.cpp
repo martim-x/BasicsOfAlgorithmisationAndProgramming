@@ -1,7 +1,6 @@
 #include "hash_table.h"
 #include <iostream>
 #include <string>
-#include <climits>
 using namespace std;
 
 int getValidatedInt(const string& prompt, int min, int max) {
@@ -39,7 +38,7 @@ void displayMenu() {
     cout << "5. Display table statistics" << endl;
     cout << "6. Clear table" << endl;
     cout << "7. Measure search time" << endl;
-    cout << "8. Exit" << endl;
+    cout << "0. Exit" << endl;
 }
 
 int main() {
@@ -51,24 +50,27 @@ int main() {
     
     while (true) {
         displayMenu();
-        int choice = getValidatedInt("Enter your choice (1-8): ", 1, 8);
+        int choice = getValidatedInt("Enter your choice (0-7): ", 0, 7);
         
         switch (choice) {
             case 1: {
-                int key = getValidatedInt("Enter key (0-" + to_string(size-1) + "): ", 0, size-1);
+                int keyInt = getValidatedInt("Enter key (any positive number): ", 1, INT32_MAX);
+                string key = to_string(keyInt);
                 string value = getValidatedString("Enter value: ");
                 table.insert(key, value);
                 cout << "Key-value pair inserted successfully." << endl;
                 break;
             }
             case 2: {
-                int key = getValidatedInt("Enter key to remove (0-" + to_string(size-1) + "): ", 0, size-1);
+                int keyInt = getValidatedInt("Enter key to remove (any positive number): ", 1, INT32_MAX);
+                string key = to_string(keyInt);
                 table.remove(key);
                 cout << "Key removed successfully." << endl;
                 break;
             }
             case 3: {
-                int key = getValidatedInt("Enter key to search (0-" + to_string(size-1) + "): ", 0, size-1);
+                int keyInt = getValidatedInt("Enter key to search (any positive number): ", 1, INT32_MAX);
+                string key = to_string(keyInt);
                 string result = table.search(key);
                 if (!result.empty()) {
                     cout << "Value found: " << result << endl;
@@ -93,12 +95,12 @@ int main() {
                 break;
             }
             case 7: {
-                int key = getValidatedInt("Enter key to measure search time (0-" + to_string(size-1) + "): ", 0, size-1);
+                int keyInt = getValidatedInt("Enter key to measure search time (any positive number): ", 1, INT32_MAX);
+                string key = to_string(keyInt);
                 table.measureSearchTime(key);
                 break;
             }
-            case 8: {
-                cout << "Thank you for using Hash Table Implementation. Goodbye!" << endl;
+            case 0: {
                 return 0;
             }
         }

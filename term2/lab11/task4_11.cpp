@@ -1,8 +1,9 @@
 #include "hash_table.h"
 #include <iostream>
 #include <string>
-#include <climits>
-#include <random>
+#include <vector>
+#include <map>
+
 using namespace std;
 
 int getValidatedInt(const string& prompt, int min, int max) {
@@ -21,120 +22,107 @@ int getValidatedInt(const string& prompt, int min, int max) {
 
 string getValidatedString(const string& prompt) {
     string value;
-    while (true) {
-        cout << prompt;
-        getline(cin, value);
-        if (!value.empty()) {
-            return value;
+    cout << prompt;
+    getline(cin, value);
+    return value;
+}
+
+void recreateTable(HashTable*& table) {
+    map<string, string> elements;
+    
+    for (int i = 0; i < table->getCapacity(); i++) {
+        if (!table->isEmpty(i) && !table->isDeleted(i)) {
+            elements[table->getKey(i)] = table->getValue(i);
         }
-        cout << "Invalid input. Please enter a non-empty string." << endl;
     }
+    
+    int newSize = table->getCapacity() * 2;
+    delete table;
+    table = new HashTable(newSize, HashType::OPEN_ADDRESS);
+    
+    for (const auto& elem : elements) {
+        table->insert(elem.first, elem.second);
+    }
+    
+    cout << "Table recreated. New size: " << newSize << endl;
 }
 
 void displayMenu() {
-    cout << "\nHash Table Comparison Menu:" << endl;
-    cout << "1. Insert key-value pair (Universal Hashing)" << endl;
-    cout << "2. Insert key-value pair (Modular Hashing)" << endl;
-    cout << "3. Remove by key" << endl;
-    cout << "4. Search by key" << endl;
-    cout << "5. Display table contents" << endl;
-    cout << "6. Display table statistics" << endl;
-    cout << "7. Clear table" << endl;
-    cout << "8. Compare search times" << endl;
-    cout << "9. Exit" << endl;
-}
-
-void compareSearchTimes(HashTable& universalTable, HashTable& modularTable, int size) {
-    cout << "\nComparing search times between Universal and Modular Hashing:" << endl;
-    
-    // Generate random keys for comparison
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> dis(0, size-1);
-    
-    for (int i = 0; i < 5; i++) {
-        int key = dis(gen);
-        cout << "\nSearching for key " << key << ":" << endl;
-        
-        cout << "Universal Hashing: ";
-        universalTable.measureSearchTime(key);
-        
-        cout << "Modular Hashing: ";
-        modularTable.measureSearchTime(key);
-    }
+    cout << "\nHash Table with Open Addressing Menu:" << endl;
+    cout << "1. Insert key-value pair" << endl;
+    cout << "2. Remove by key" << endl;
+    cout << "3. Search by key" << endl;
+    cout << "4. Display table contents" << endl;
+    cout << "5. Display table statistics" << endl;
+    cout << "6. Clear table" << endl;
+    cout << "7. Measure search time" << endl;
+    cout << "0. Exit" << endl;
 }
 
 int main() {
-    cout << "Welcome to Hash Table Comparison Implementation!" << endl;
-    cout << "This implementation compares Universal and Modular Hashing" << endl;
+    cout << "This implementation uses open addressing" << endl;
+    cout << "Table will be resized when load factor reaches 0.8" << endl;
     
-    // Get initial table size
     int size = getValidatedInt("Enter initial table size (1-1000): ", 1, 1000);
     
-    // Create tables with different hash types
-    HashTable universalTable(size, HashType::UNIVERSAL);
-    HashTable modularTable(size, HashType::LINEAR);
+    HashTable* table = new HashTable(size, HashType::OPEN_ADDRESS);
     
     while (true) {
         displayMenu();
-        int choice = getValidatedInt("Enter your choice (1-9): ", 1, 9);
+        int choice = getValidatedInt("Enter your choice (0-7): ", 0, 7);
         
         switch (choice) {
             case 1: {
-                int key = getValidatedInt("Enter key (0-" + to_string(size-1) + "): ", 0, size-1);
+                string key = getValidatedString("Enter key: ");
                 string value = getValidatedString("Enter value: ");
-                universalTable.insert(key, value);
-                cout << "Key-value pair inserted successfully in Universal Hashing table." << endl;
+                
+                table->insert(key, value);
+                
+                if (static_cast<double>(table->getSize()) / table->getCapacity() >= 0.8) {
+                    recreateTable(table);
+                }
+                
+                cout << "Key-value pair inserted successfully." << endl;
                 break;
             }
             case 2: {
-                int key = getValidatedInt("Enter key (0-" + to_string(size-1) + "): ", 0, size-1);
-                string value = getValidatedString("Enter value: ");
-                modularTable.insert(key, value);
-                cout << "Key-value pair inserted successfully in Modular Hashing table." << endl;
+                string key = getValidatedString("Enter key to remove: ");
+                table->remove(key);
+                cout << "Key removed successfully." << endl;
                 break;
             }
             case 3: {
-                int key = getValidatedInt("Enter key to remove (0-" + to_string(size-1) + "): ", 0, size-1);
-                universalTable.remove(key);
-                modularTable.remove(key);
-                cout << "Key removed successfully from both tables." << endl;
+                string key = getValidatedString("Enter key to search: ");
+                string result = table->search(key);
+                if (!result.empty()) {
+                    cout << "Value found: " << result << endl;
+                } else {
+                    cout << "Key not found." << endl;
+                }
                 break;
             }
             case 4: {
-                int key = getValidatedInt("Enter key to search (0-" + to_string(size-1) + "): ", 0, size-1);
-                string result1 = universalTable.search(key);
-                string result2 = modularTable.search(key);
-                cout << "Universal Hashing: " << (result1.empty() ? "Not found" : "Found: " + result1) << endl;
-                cout << "Modular Hashing: " << (result2.empty() ? "Not found" : "Found: " + result2) << endl;
+                cout << "\nHash Table Contents:" << endl;
+                table->display();
                 break;
             }
             case 5: {
-                cout << "\nUniversal Hashing Table Contents:" << endl;
-                universalTable.display();
-                cout << "\nModular Hashing Table Contents:" << endl;
-                modularTable.display();
+                cout << "\nHash Table Statistics:" << endl;
+                table->displayStats();
                 break;
             }
             case 6: {
-                cout << "\nUniversal Hashing Table Statistics:" << endl;
-                universalTable.displayStats();
-                cout << "\nModular Hashing Table Statistics:" << endl;
-                modularTable.displayStats();
+                table->clear();
+                cout << "Table cleared successfully." << endl;
                 break;
             }
             case 7: {
-                universalTable.clear();
-                modularTable.clear();
-                cout << "Both tables cleared successfully." << endl;
+                string key = getValidatedString("Enter key to measure search time: ");
+                table->measureSearchTime(key);
                 break;
             }
-            case 8: {
-                compareSearchTimes(universalTable, modularTable, size);
-                break;
-            }
-            case 9: {
-                cout << "Thank you for using Hash Table Comparison. Goodbye!" << endl;
+            case 0: {
+                delete table;
                 return 0;
             }
         }

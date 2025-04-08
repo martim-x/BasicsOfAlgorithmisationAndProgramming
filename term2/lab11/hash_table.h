@@ -6,19 +6,19 @@
 #include <chrono>
 
 enum class HashType {
-    LINEAR,
-    QUADRATIC,
-    DOUBLE,
-    UNIVERSAL
+    QUADRATIC,    // Вариант 1: Квадратичное пробирование
+    ADDITIVE,     // Вариант 8: Аддитивный метод
+    OPEN_ADDRESS, // Вариант 11: Открытая адресация
+    UNIVERSAL     // Вариант 14: Универсальное хеширование
 };
 
 struct HashNode {
-    int key;
+    std::string key;
     std::string value;
     bool isDeleted;
     bool isEmpty;
 
-    HashNode() : key(0), value(""), isDeleted(false), isEmpty(true) {}
+    HashNode() : key(""), value(""), isDeleted(false), isEmpty(true) {}
 };
 
 class HashTable {
@@ -28,33 +28,44 @@ private:
     int capacity;
     double loadFactor;
     HashType hashType;
+    int collisionCount = 0;
     
-    // Константы для квадратичного зондирования
+    // Константы для квадратичного пробирования
     const int C1 = 1;
     const int C2 = 1;
     
     // Константы для универсального хеширования
-    const int A = 2654435761; // Золотое сечение
-    const int B = 0;
+    const int A = 4;  // Уменьшаем константу A
+    const int B = 3;
     
-    int hashFunction(int key) const;
-    int linearProbe(int key, int i) const;
-    int quadraticProbe(int key, int i) const;
-    int doubleHash(int key, int i) const;
-    int universalHash(int key, int i) const;
+    // Базовые функции хеширования
+    int quadraticHash(const std::string& key, int i) const;
+    int additiveHash(const std::string& key) const;
+    int openAddressHash(const std::string& key, int i) const;
+    int universalHash(const std::string& key, int i) const;
+    
     void rehash();
+    void countCollision(int originalHash, int currentHash, int i);
 
 public:
-    HashTable(int initialSize, HashType type = HashType::LINEAR);
+    HashTable(int initialSize, HashType type = HashType::QUADRATIC);
     ~HashTable();
     
-    void insert(int key, const std::string& value);
-    void remove(int key);
-    std::string search(int key);
+    void insert(const std::string& key, const std::string& value);
+    void remove(const std::string& key);
+    std::string search(const std::string& key);
     void display() const;
     void displayStats() const;
     void clear();
-    void measureSearchTime(int key);
+    void measureSearchTime(const std::string& key);
+    
+    // Методы для доступа к элементам таблицы
+    int getCapacity() const { return capacity; }
+    int getSize() const { return size; }
+    bool isEmpty(int index) const { return table[index].isEmpty; }
+    bool isDeleted(int index) const { return table[index].isDeleted; }
+    std::string getKey(int index) const { return table[index].key; }
+    std::string getValue(int index) const { return table[index].value; }
 };
 
 #endif 
