@@ -1,7 +1,12 @@
 #include "hash_table.h"
 #include <iostream>
 #include <string>
+#include <vector>
+#include <random>
+#include <chrono>
+#include <ctime>
 using namespace std;
+using namespace std::chrono;
 
 int getValidatedInt(const string& prompt, int min, int max) {
     int value;
@@ -29,6 +34,44 @@ string getValidatedString(const string& prompt) {
     }
 }
 
+
+void testSearchTime() {
+    HashTable table(1000000, HashType::QUADRATIC);
+    vector<string> insertedKeys;
+    insertedKeys.reserve(1000000);
+
+    int thresholds[] = {100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000};
+
+    srand(time(0));
+
+    for (int t : thresholds) {
+        for (int i = insertedKeys.size(); i < t; i++) {
+            string key = to_string(i);
+            table.insert(key, "value" + key);
+            insertedKeys.push_back(key);
+        }
+
+        long long totalDuration = 0;
+        for (int i = 0; i < t; i++) {
+            int randomIndex = rand() % insertedKeys.size();
+            string randomKey = insertedKeys[randomIndex];
+
+            auto start = high_resolution_clock::now();
+            string result = table.search(randomKey);
+            auto end = high_resolution_clock::now();
+
+            totalDuration += duration_cast<microseconds>(end - start).count();
+        }
+
+        long double averageTime = static_cast<long double>(totalDuration) / (t+0.0);
+
+        cout << "Size " << t 
+             << " | Average search time over "<< t <<" keys: " 
+             << averageTime << " microseconds" << endl;
+    }
+}
+
+
 void displayMenu() {
     cout << "\nHash Table with Quadratic Probing Menu:" << endl;
     cout << "1. Insert key-value pair" << endl;
@@ -38,6 +81,7 @@ void displayMenu() {
     cout << "5. Display table statistics" << endl;
     cout << "6. Clear table" << endl;
     cout << "7. Measure search time" << endl;
+    cout << "8. Test search time" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -50,7 +94,7 @@ int main() {
     
     while (true) {
         displayMenu();
-        int choice = getValidatedInt("Enter your choice (0-7): ", 0, 7);
+        int choice = getValidatedInt("Enter your choice (0-8): ", 0, 8);
         
         switch (choice) {
             case 1: {
@@ -98,6 +142,11 @@ int main() {
                 int keyInt = getValidatedInt("Enter key to measure search time (any positive number): ", 1, INT32_MAX);
                 string key = to_string(keyInt);
                 table.measureSearchTime(key);
+                break;
+            }
+            case 8: {
+                cout << "\nTesting search time..." << endl;
+                testSearchTime();
                 break;
             }
             case 0: {

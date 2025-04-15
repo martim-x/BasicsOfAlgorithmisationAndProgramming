@@ -72,6 +72,11 @@
         "xloctime": "cpp",
         "xmemory": "cpp",
         "xtr1common": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "functional": "cpp",
+        "list": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "xhash": "cpp"
     }
 }

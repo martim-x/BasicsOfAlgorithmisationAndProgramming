@@ -5,8 +5,9 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
-
+#include <ctime>
 using namespace std;
+using namespace std::chrono;
 
 int getValidatedInt(const string& prompt, int min, int max) {
     int value;
@@ -55,39 +56,72 @@ void displayMenu() {
     cout << "0. Exit" << endl;
 }
 
-void testSearchPerformance(HashType type) {
-    cout << "\nTesting " << (type == HashType::OPEN_ADDRESS ? "Modular" : "Universal") << " Hashing Performance:" << endl;
-    cout << "Creating test hash table..." << endl;
-    HashTable testTable(100010, type);
+void testSearchTime_universal() {
+    HashTable table(1000000, HashType::UNIVERSAL);
+    vector<string> insertedKeys;
+    insertedKeys.reserve(1000000);
     
-    cout << "Generating 100000 random elements..." << endl;
-    vector<string> testKeys;
+    int thresholds[] = {100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000};
+    srand(time(0));
     
-    // Generate and save keys
-    for (int i = 0; i < 100000; ++i) {
-        string key = generateRandomString(10);
-        string value = generateRandomString(20);
-        testKeys.push_back(key);
-        testTable.insert(key, value);
-    }
-    
-    cout << "Testing search performance with 1000 random elements..." << endl;
-    double totalTime = 0;
-    
-    // Test with 1000 random keys
-    for (int i = 0; i < 1000; ++i) {
-        string key = testKeys[rand() % testKeys.size()];
+    for (int t : thresholds) {
+        for (int i = insertedKeys.size(); i < t; i++) {
+            string key = to_string(i);
+            table.insert(key, "value" + key);
+            insertedKeys.push_back(key);
+        }
         
-        auto start = chrono::high_resolution_clock::now();
-        testTable.search(key);
-        auto end = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-        totalTime += duration.count();
+        long long totalDuration = 0;
+        for (int i = 0; i < t; i++) {
+            int randomIndex = rand() % insertedKeys.size();
+            string randomKey = insertedKeys[randomIndex];
+            
+            auto start = high_resolution_clock::now();
+            string result = table.search(randomKey);
+            auto end = high_resolution_clock::now();
+            
+            totalDuration += duration_cast<microseconds>(end - start).count();
+        }
+        
+        long double averageTime = static_cast<long double>(totalDuration) / (t + 0.0);
+        cout << "[UNIVERSAL] Size " << t 
+             << " | Average search time over " << t 
+             << " keys: " << averageTime << " microseconds" << endl;
     }
+}
 
-    cout << "Average search time: " << totalTime / 1000 << " milliseconds" << endl;
-    cout << "Table statistics:" << endl;
-    testTable.displayStats();
+void testSearchTime_openAddress() {
+    HashTable table(1000000, HashType::OPEN_ADDRESS);
+    vector<string> insertedKeys;
+    insertedKeys.reserve(1000000);
+    
+    int thresholds[] = {100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000};
+    srand(time(0));
+    
+    for (int t : thresholds) {
+        for (int i = insertedKeys.size(); i < t; i++) {
+            string key = to_string(i);
+            table.insert(key, "value" + key);
+            insertedKeys.push_back(key);
+        }
+        
+        long long totalDuration = 0;
+        for (int i = 0; i < t; i++) {
+            int randomIndex = rand() % insertedKeys.size();
+            string randomKey = insertedKeys[randomIndex];
+            
+            auto start = high_resolution_clock::now();
+            string result = table.search(randomKey);
+            auto end = high_resolution_clock::now();
+            
+            totalDuration += duration_cast<microseconds>(end - start).count();
+        }
+        
+        long double averageTime = static_cast<long double>(totalDuration) / (t + 0.0);
+        cout << "[OPEN] Size " << t 
+             << " | Average search time over " << t 
+             << " keys: " << averageTime << " microseconds" << endl;
+    }
 }
 
 int main() {
@@ -150,15 +184,13 @@ int main() {
 
             case 7: {
                 cout << "\n=== Performance Testing ===" << endl;
-                cout << "Testing both hash functions..." << endl;
+                cout << "\nTesting search time..." << endl;
+
+                testSearchTime_universal();
                 
-                // Test Modular Hashing
-                testSearchPerformance(HashType::OPEN_ADDRESS);
+                cout << endl<<"\nTesting search time..." << endl;
                 
-                cout << "\n---" << endl;
-                
-                // Test Universal Hashing
-                testSearchPerformance(HashType::UNIVERSAL);
+                testSearchTime_openAddress();
                 
                 cout << "\n=== Performance Testing Complete ===" << endl;
                 break;
@@ -170,4 +202,5 @@ int main() {
     }
     
     return 0;
-} 
+}
+
