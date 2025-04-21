@@ -6,7 +6,7 @@
 #include <limits>
 #include <algorithm>
 #include <cctype>
-#include "validators.h"
+#include "../lab7/validators.h"
 
 using namespace std;
 
@@ -51,12 +51,37 @@ struct PawnItem {
 };
 
 
+bool isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+
+bool isValidDate(int day, int month, int year) {
+    if (month < 1 || month > 12) return false;
+
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int maxDay = daysInMonth[month - 1];
+
+    if (month == 2 && isLeapYear(year)) {
+        maxDay = 29;
+    }
+
+    return day >= 1 && day <= maxDay;
+}
+
+
 Date inputDate() {
     Date d;
-    d.day = inputValidatedInt("Enter day (1-31): ", 1, 31);
-    d.month = inputValidatedInt("Enter month (1-12): ", 1, 12);
-    d.year = inputValidatedInt("Enter year (1900-2099): ", 1900, 2099);
-    return d;
+    while (true) {
+        d.day = inputValidatedInt("Enter day (1-31): ", 1, 31);
+        d.month = inputValidatedInt("Enter month (1-12): ", 1, 12);
+        d.year = inputValidatedInt("Enter year (1900-2099): ", 1900, 2099);
+
+        if (isValidDate(d.day, d.month, d.year)) {
+            return d;
+        }
+        cout << "Invalid date! Please enter a valid date." << endl;
+    }
 }
 
 
@@ -74,7 +99,7 @@ ProductType inputProductType() {
 
 void addPawnItem(vector<PawnItem>& items) {
     PawnItem item;
-    item.clientLastName = inputValidatedString("Enter client's last name: ", " -", false);
+    item.clientLastName = inputValidatedName("Enter client's last name: ", false);
     item.productName = inputValidatedString("Enter product name: ", " -", false);
     item.productType = inputProductType();
     item.appraisedValue = inputValidatedDouble("Enter appraised value (0.01 - 100000.0): ", 0.01, 100000.0);
@@ -114,12 +139,8 @@ void showAllItems(const vector<PawnItem>& items) {
 
 
 void deletePawnItem(vector<PawnItem>& items) {
-    cout << "Enter client's last name of the item to delete: ";
-    string lastName;
-    getline(cin, lastName);
-    cout << "Enter product name of the item to delete: ";
-    string prodName;
-    getline(cin, prodName);
+    string lastName = inputValidatedName("Enter client's last name of the item to delete: ", false);
+    string prodName = inputValidatedString("Enter product name of the item to delete: ", " -", false);
 
     auto it = remove_if(items.begin(), items.end(), [&](const PawnItem& item) {
         return (item.clientLastName == lastName && item.productName == prodName);
