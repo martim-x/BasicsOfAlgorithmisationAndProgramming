@@ -46,6 +46,7 @@ int HashTable::universalHash(const std::string& key, int i) const {
 void HashTable::countCollision(int originalHash, int currentHash, int i) {
     if (i > 0) {
         collisionCount++;
+        std::cout << "Collision detected at index " << currentHash << " (original index: " << originalHash << ")" << std::endl;
     }
 }
 
